@@ -24,15 +24,21 @@ const main = ctx => {
         console.log(cmd2)
         const process2 = child_process.spawn(cmd2, {shell: true})
         process2.stdout.on('close',()=>{
-          const cmd3 = 'pm2 start hexo_server.js'
-          console.log(cmd3)
-          const process3 = child_process.spawn(cmd3, {shell: true})
-          process3.on('close',()=>{
-            console.log('hexo blog start !!!!')
-            const response = {code: 200, message: 'update successfully'}
-            ctx.response.body = response
-            ctx.status = 200
+          const cmd4 = 'pm2 delete hexo_server'
+          console.log(cmd4)
+          const process4 = child_process.spawn(cmd4, {shell: true})
+          process4.on('close', () => {
+            const cmd3 = 'pm2 start hexo_server.js'
+            console.log(cmd3)
+            const process3 = child_process.spawn(cmd3, {shell: true})
+            process3.on('close',()=>{
+              console.log('hexo blog start !!!!')
+              const response = {code: 200, message: 'update successfully'}
+              ctx.response.body = response
+              ctx.status = 200
+            })
           })
+          
         })
       
       })
