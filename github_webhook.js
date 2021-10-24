@@ -2,7 +2,7 @@ const Koa = require('koa');
 const app = new Koa();
 const child_process = require('child_process')
 
-const server 
+let server = undefined;
 
 const main = ctx => {
   if(server){
