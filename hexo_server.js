@@ -11,6 +11,6 @@ const app = new Koa();
 // or use absolute paths
 app.use(serve(__dirname + '/public'));
  
-app.listen(4444);
+app.listen(80);
  
-console.log('listening on port 4444');
+console.log('listening on port 80');
