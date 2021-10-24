@@ -5,7 +5,8 @@ const child_process = require('child_process')
 const main = ctx => {
     console.log(ctx.request.headers)
     console.log(ctx.request.body)
-    const cmd = 'git stash && git pull && hexo clean && hexo generate && hexo server -p 80'
+    console.log('start cmd')
+    const cmd = 'git stash && git pull && hexo clean && hexo generate && pm2 start hexo_server.js'
     const process = child_process.spawn(cmd, {shell: true})
     process.stderr.on('data', (data) => {
       console.error(data.toString())
