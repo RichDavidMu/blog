@@ -6,10 +6,10 @@ const app = new Koa();
 // app.use(serve('.'));
  
 // $ GET /hello.txt
-// app.use(serve('public'));
+app.use(serve('public'));
  
 // or use absolute paths
-app.use(serve(__dirname + '/public'));
+// app.use(serve(__dirname + '/public'));
  
 app.listen(80);
  
