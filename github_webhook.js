@@ -28,7 +28,7 @@ const main = ctx => {
           console.log(cmd3)
           const process3 = child_process.spawn(cmd3, {shell: true})
           process3.on('close',()=>{
-            console.log(data.toString())
+            console.log('hexo blog start !!!!')
             const response = {code: 200, message: 'update successfully'}
             ctx.response.body = response
             ctx.status = 200
