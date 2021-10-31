@@ -9,10 +9,6 @@ const sigHashAlg = 'sha256'
 const secret = 'm7758521'
 let server = undefined;
 
-app.use(bodyParser.json({
-
-}))
-
 const main = ctx => {
   if(server){
     server.kill()
