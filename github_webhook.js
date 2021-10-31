@@ -23,7 +23,11 @@ const main = ctx => {
   console.log(hmac)
   const digest = sigHashAlg + '=' + hmac.update(JSON.stringify(ctx.request.body)).digest('hex')
   console.log(digest)
-  if(githubSig !== digest) {
+  const bufferA = Buffer.from(githubSig, 'utf8');
+  const bufferB = Buffer.from(digest, 'utf8');
+  const safe = crypto.timingSafeEqual(bufferA, bufferB);
+
+  if(!safe) {
     ctx.status = 403
     return ctx
   }
