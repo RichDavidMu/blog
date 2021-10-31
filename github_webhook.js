@@ -2,9 +2,12 @@ const Koa = require('koa');
 const app = new Koa();
 const child_process = require('child_process')
 const crypto = require('crypto')
+const bodyParser = require('koa-bodyparser')
 
 const sigHeaderName = 'x-hub-signature-256'
 const sigHashAlg = 'sha256'
+
+app.use(bodyParser())
 
 const secret = 'm7758521'
 let server = undefined;
