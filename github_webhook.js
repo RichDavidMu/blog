@@ -1,12 +1,33 @@
 const Koa = require('koa');
 const app = new Koa();
 const child_process = require('child_process')
+const crypto = require('crypto')
 
+const sigHeaderName = 'x-hub-signature-256'
+const sigHashAlg = 'sha256'
+
+const secret = 'm7758521'
 let server = undefined;
+
+app.use(bodyParser.json({
+
+}))
 
 const main = ctx => {
   if(server){
     server.kill()
+  }
+
+  const githubSig = ctx.request.headers[`${sigHeaderName}`]
+  console.log(githubSig)
+  const hmac = crypto.createHmac(sigHashAlg, secret)
+  console.log(hmac)
+  console.log(ctx.request.body)
+  const digest = sigHashAlg + '=' + hmac.update(JSON.stringify(ctx.request.body)).digest('hex')
+  console.log(digest)
+  if(githubSig !== digest) {
+    ctx.status = 403
+    return ctx
   }
     console.log(ctx.request.headers)
     console.log(ctx.request.body)
@@ -41,6 +62,7 @@ const main = ctx => {
               const response = {code: 200, message: 'update successfully'}
               ctx.response.body = response
               ctx.status = 200
+              return ctx;
             })
           })
           // const cmd3 = 'hexo server -p 80'
