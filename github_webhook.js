@@ -7,7 +7,7 @@ const bodyParser = require('koa-bodyparser')
 const sigHeaderName = 'x-hub-signature'
 const sigHashAlg = 'sha1'
 
-app.use(bodyParser())
+// app.use(bodyParser())
 
 const secret = 'm7758521'
 let server = undefined;
@@ -17,22 +17,22 @@ const main = ctx => {
     server.kill()
   }
 
-  const githubSig = ctx.request.headers[`${sigHeaderName}`]
-  console.log(githubSig)
-  const hmac = crypto.createHmac(sigHashAlg, secret)
-  console.log(hmac)
-  const digest = sigHashAlg + '=' + hmac.update(JSON.stringify(ctx.request.body)).digest('hex')
-  console.log(digest)
-  const bufferA = Buffer.from(githubSig, 'utf8');
-  const bufferB = Buffer.from(digest, 'utf8');
-  const safe = crypto.timingSafeEqual(bufferA, bufferB);
+  // const githubSig = ctx.request.headers[`${sigHeaderName}`]
+  // console.log(githubSig)
+  // const hmac = crypto.createHmac(sigHashAlg, secret)
+  // console.log(hmac)
+  // const digest = sigHashAlg + '=' + hmac.update(JSON.stringify(ctx.request.body)).digest('hex')
+  // console.log(digest)
+  // const bufferA = Buffer.from(githubSig, 'utf8');
+  // const bufferB = Buffer.from(digest, 'utf8');
+  // const safe = crypto.timingSafeEqual(bufferA, bufferB);
 
-  if(!safe) {
-    ctx.status = 403
-    return ctx
-  }
+  // if(!safe) {
+  //   ctx.status = 403
+  //   return ctx
+  // }
     console.log(ctx.request.headers)
-    console.log(ctx.request.body)
+    // console.log(ctx.request.body)
     console.log('start cmd')
     const cmd = 'git stash && git pull'
     console.log(cmd)
@@ -88,5 +88,5 @@ const main = ctx => {
   };
   
 app.use(main);
-app.listen(3000);
+app.listen(1996);
 console.log('github hook server listen at port 3000')
