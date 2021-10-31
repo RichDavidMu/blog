@@ -32,7 +32,7 @@ const main = ctx => {
     console.log(ctx.request.headers)
     console.log(ctx.request.body)
     console.log('start cmd')
-    const cmd = 'git pull'
+    const cmd = 'git stash && git pull'
     console.log(cmd)
     const process = child_process.spawn(cmd, {shell: true})
     process.stderr.on('data', (data) => {
