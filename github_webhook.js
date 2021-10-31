@@ -4,8 +4,8 @@ const child_process = require('child_process')
 const crypto = require('crypto')
 const bodyParser = require('koa-bodyparser')
 
-const sigHeaderName = 'x-hub-signature-256'
-const sigHashAlg = 'sha256'
+const sigHeaderName = 'x-hub-signature'
+const sigHashAlg = 'sha1'
 
 app.use(bodyParser())
 
