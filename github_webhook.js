@@ -21,7 +21,6 @@ const main = ctx => {
   console.log(githubSig)
   const hmac = crypto.createHmac(sigHashAlg, secret)
   console.log(hmac)
-  console.log(ctx.request.body)
   const digest = sigHashAlg + '=' + hmac.update(JSON.stringify(ctx.request.body)).digest('hex')
   console.log(digest)
   if(githubSig !== digest) {
