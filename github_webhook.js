@@ -34,7 +34,7 @@ const main = ctx => {
   // }
   
     console.log(ctx.request.headers)
-    if(!(ctx.request.headers[`${sigHeaderName}`] && ctx.request.headers[`${xGithubHookId}`] === '324799697' && ctx.request.headers[`${GithubHookInstallationTarget}`] === '420359102')){
+    if(!(ctx.request.headers[`${sigHeaderName}`] && ctx.request.headers[`${xGithubHookId}`] === '324799697' && ctx.request.headers[`${xGithubHookInstallationTarget}`] === '420359102')){
       return ctx.status = 403
     }
     // console.log(ctx.request.body)
