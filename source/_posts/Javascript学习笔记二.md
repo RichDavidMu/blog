@@ -1,7 +1,7 @@
 ---
 title: Javascript学习笔记二
-date: 2020-02-11 16:26:09
-index_img: /img/blogCovers/js1.jpg
+date: 2020-02-12 16:26:09
+index_img: /img/blogCovers/js2.jpg
 tags: [JavaScript]
 categories: [学习笔记]
 ---

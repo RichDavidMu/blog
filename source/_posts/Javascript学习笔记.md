@@ -1,5 +1,5 @@
 ---
-title: Javascript学习笔记
+title: Javascript学习笔记一
 date: 2020-02-11 16:26:09
 index_img: /img/blogCovers/js1.jpg
 tags: [JavaScript]
