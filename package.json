@@ -26,6 +26,7 @@
     "hexo-theme-landscape": "^0.0.3",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "koa-sslify": "^5.0.0",
     "koa-static": "^5.0.0"
   }
 }
