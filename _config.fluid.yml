@@ -2,7 +2,7 @@
 ## Docs: https://hexo.io/docs/configuration.html
 ## Source: https://github.com/hexojs/hexo/
 
-favicon: /img/favicon.jpg
+favicon: /img/favicon.png
 apple_touch_icon: /img/favicon.png
 # hexo
 dark_mode:
