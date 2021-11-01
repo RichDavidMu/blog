@@ -5,9 +5,10 @@ const crypto = require('crypto')
 const bodyParser = require('koa-bodyparser')
 
 const sigHeaderName = 'x-hub-signature'
-const sigHashAlg = 'sha1'
+const xGithubHookId = 'x-github-hook-id'
+const xGithubHookInstallationTarget = 'x-github-hook-installation-target-id'
 
-// app.use(bodyParser())
+app.use(bodyParser())
 
 const secret = 'm7758521'
 let server = undefined;
@@ -31,7 +32,11 @@ const main = ctx => {
   //   ctx.status = 403
   //   return ctx
   // }
+  
     console.log(ctx.request.headers)
+    if(!(ctx.request.headers[`${sigHeaderName}`] && ctx.request.headers[`${xGithubHookId}`] === '324799697' && ctx.request.headers[`${GithubHookInstallationTarget}`] === '420359102')){
+      return ctx.status = 403
+    }
     // console.log(ctx.request.body)
     console.log('start cmd')
     const cmd = 'git stash && git pull'
