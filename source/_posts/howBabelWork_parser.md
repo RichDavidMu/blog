@@ -1,3 +1,10 @@
+---
+title: Babel原理浅析一
+date: 2021-04-01 23:16:10
+index_img: /img/blogCovers/babel.svg
+tags: [JavaScript, Babel, 前端工程化]
+categories: [源码解读]
+---
 babel可以将ECMAScript2015+的语法，编译成ES5的语法，如：
 ```javascript
 const square = n => n * n;
