@@ -108,7 +108,7 @@ const square = n => n * n;
 两步：**词法解析**、**语法解析**
 
 
-![lexicalAnalysis](../img/howBabelWork_parser/lexicalAnalysis.png)
+![lexicalAnalysis](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image?)
 
 词法解析（lexical analysis），顾名思义，是对单词本义的解析，首先扫描器（scanner）会对代码进行扫描操作，把代码分割成一个个有意义的词（lexemes），如：单词，标点等。`const square = n => n * n;`会被分割成`[const, squara, =, n, =, >, n, *, n]`。这个过程跟这段代码是用什么语言写的没有关系。随后标识器（tokenizer）会对lexemes进行释义，比如：`const`会被标识为关键字、`=, >`两个符号会标识为箭头，这个过程就与使用的语言有关了，`const`在js中会被标识为关键字，但在c语言中就不会，因为c语言中没有这个关键字。最后输出(tokens)为
 ```javascript
@@ -152,11 +152,11 @@ const square = n => n * n;
 ]
 ```
 当我们有了tokens，就可以进行语法解析（syntax analysis）了，解析器（parser）会把tokens转换为一棵解析树（parse tree），也可以称之为具体语法树(CST, concrete syntax tree)
-![syntaxTree](../img/howBabelWork_parser/syntaxTree.png)
+![syntaxTree](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04039762baf24be6adbc2fc0c80da617~tplv-k3u1fbpfcp-watermark.image?)
 如果仔细看这棵CST，可以看到很多无用信息，比如，有很多节点只有一个子节点，那这种节点完全可以压缩去掉，因为它没有给我们提供额外的有用信息。
-![cstAfterCompress](../img/howBabelWork_parser/cstAfterCompress.png)
+![cstAfterCompress](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bbe883ca20c47bfbe50c741f734d6a3~tplv-k3u1fbpfcp-watermark.image?)
 压缩后继续来看这棵树，可以发现一些标点符号与操作符可以用n叉树本身的结构就可以代表，所以再来简化一下。
-![ast](../img/howBabelWork_parser/ast.png)
+![ast](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69b9d88e7e824353980fb4455607812e~tplv-k3u1fbpfcp-watermark.image?)
 得到了最终我们想要的结构，一棵非常抽象（相较于CST）、简化的AST。
 
 可以在[这个网站](https://esprima.org/demo/parse.html?code=const%20square%20%3D%20n%20%3D%3E%20n%20*%20n%3B%0A)，输入随便一段代码，看看对应的tokens与AST。
