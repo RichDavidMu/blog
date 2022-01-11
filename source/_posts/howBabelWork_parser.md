@@ -78,12 +78,11 @@ code -> AST -> transformed AST -> transformed code
 第一个术语出现了，什么是AST，如果你看过《VS CODE权威指南》，可能对这个词会有点印象，AST会包含分析某段代码所包含的所有必要信息（关键词，变量名，变量值等），并剔除无用信息（标点符号，注释等），眼见为实，先来用babel的解析器生成一棵AST，这部分代码都在[babel/packages/babel-parser](https://github.com/babel/babel/tree/main/packages/babel-parser)中。
 
 
-这时候在babel目录下我们新建一个js文件，暂且叫它test.js吧。
-```javascript
-// test.js
-const square = n => n * n;
+我们在test.js中将ast打印出来
+```javascript 
+console.log(ast)
 ```
-紧接着我们运行一下bable-parser, `node "packages/babel-parser/bin/babel-parser.js" "test.js"`，可以看到babel解析器输出了AST。它非常的长，我们只有一行函数声明，它对应的AST竟然有近200行。我们去掉一些代码位置信息，分析一下这个精简版AST。
+可以看到babel解析器输出了AST。它非常的长，我们只有一行函数声明，它对应的AST竟然有近200行。我们去掉一些代码位置信息，分析一下这个精简版AST。
 ```json
 {
     "type": "File",
@@ -135,8 +134,8 @@ const square = n => n * n;
 每一个代码块都有一个type字段，标识这个代码块的类型，如`Program`程序、`VariableDeclaration`变量声明、`ArrowFunctionExpression`箭头函数、`BinaryExpression`二项式等，每个代码块的结构不是相同的，比如`BinaryExpression`的内容是`left`、`right`、`operator`，代表`n * n`，`ArrowFunctionExpression`的内容有`params`、`body`，代表`(...params) => body`。
 
 看到这，我们已经明白AST是个什么数据结构了
-+ n叉树
-+ 每个节点包含至少两种信息，`type`节点类型、描述该类型所需要的信息
++ n叉树。
++ 每个节点包含至少两种信息，`type`节点类型、描述该类型所需要的信息（在后面的AST->code阶段，这些信息足够我们去重新生成代码）。
 
 笔者最近的工作是开发一个低代码平台，看到这个结构是非常亲切呀，跟我们平台底层配置项的数据结构可太像了，不了解低代码平台的的可以看下[这里](https://juejin.cn/post/6925306474524737543)，另外，我有突然想到[浏览器解析过程](https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work#building_the_dom_tree)会将html文件、css文件解析为DOM树与CSSOM树，这两棵树也可能是AST。
 
