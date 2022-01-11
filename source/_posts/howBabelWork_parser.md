@@ -147,7 +147,7 @@ console.log(ast)
 
 ![lexicalAnalysis](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image?)
 
-词法解析（lexical analysis），顾名思义，是对单词本义的解析，首先扫描器（scanner）会对代码进行扫描操作，把代码分割成一个个有意义的词（lexemes），如：单词，标点等。`const square = n => n * n;`会被分割成`[const, squara, =, n, =, >, n, *, n]`。这个过程跟这段代码是用什么语言写的没有关系。随后标识器（tokenizer）会对lexemes进行释义，比如：`const`会被标识为关键字、`=, >`两个符号会标识为箭头，这个过程就与使用的语言有关了，`const`在js中会被标识为关键字，但在c语言中就不会，因为c语言中没有这个关键字。最后输出(tokens)为
+词法解析（lexical analysis），顾名思义，是对单词本义的解析，首先扫描器（scanner）会对代码进行扫描操作，把代码分割成一个个有意义的词（lexemes），如：单词，标点等。`const square = n => n * n;`会被分割成`[const, squara, =, n, =, >, n, *, n]`。这个过程跟这段代码是用什么语言写的没有关系。随后标识器（tokenizer）会对lexemes进行释义，比如：`const`会被标识为关键字、`=, >`两个符号会标识为箭头，这个过程就与使用的语言有关了，`const`在js中会被标识为关键字，但在其他语言中就不一定。最后输出(tokens)为
 ```javascript
 [
     {
