@@ -5,6 +5,7 @@ index_img: /img/blogCovers/babel.svg
 tags: [JavaScript, Babel, 前端工程化]
 categories: [源码解读]
 ---
+### 概述
 babel可以将ECMAScript2015+的语法，编译成ES5的语法，如：
 ```javascript
 const square = n => n * n;
@@ -29,17 +30,52 @@ var square = function square(n) {
 
 babel用了三个运行阶段去做：**解析(parse)**、**转换(transform)**、**生成(generate)**
 
+我们可以在babel源码中调试看一下，先将babel仓库clone到本地，在babel根目录`build`一下。
+```bash
+yarn install
+npm run build
+```
+新建文件test.js
+```javascript
+const { parse } = require("./packages/babel-parser");
+const traverse = require("./packages/babel-traverse").default;
+const generate = require("./packages/babel-generator").default;
+
+const code = "const square = n => n * n";
+
+// parse the code -> ast
+const ast = parse(code);
+
+// transform the ast
+traverse(ast, {
+  enter(path) {
+    if (path.node.type !== "ArrowFunctionExpression") return;
+
+    path.arrowFunctionToExpression({
+      allowInsertArrow: false,
+      noNewArrows: true,
+      specCompliant: false,
+    });
+  },
+});
+
+// generate code <- ast
+const output = generate(ast, code);
+console.log(output.code);
+// const square = function (n) {
+//     return n * n;
+//   };
+```
+运行一下这段代码，可以看到在控制台打印出了转换后的代码，`parse`、`traverse`、`generate`分别对应转换过程的三个阶段，下面我尝试讲解下这个三个具体过程。
+`code -> AST -> transformed AST -> transformed code`
+
 ### 解析
 
 解析阶段分为两步，词法分析(lexical analysis)、语法分析(syntax analysis)，最终将一个js文件解析成为一棵抽象语法树(AST)。
 
 第一个术语出现了，什么是AST，如果你看过《VS CODE权威指南》，可能对这个词会有点印象，AST会包含分析某段代码所包含的所有必要信息（关键词，变量名，变量值等），并剔除无用信息（标点符号，注释等），眼见为实，先来用babel的解析器生成一棵AST，这部分代码都在[babel/packages/babel-parser](https://github.com/babel/babel/tree/main/packages/babel-parser)中。
 
-我们先将babel仓库clone到本地，源码中有flow类型检查，不能直接运行，所以在babel根目录先`build`一下。
-```bash
-yarn install
-npm run build
-```
+
 这时候在babel目录下我们新建一个js文件，暂且叫它test.js吧。
 ```javascript
 // test.js
@@ -160,6 +196,8 @@ const square = n => n * n;
 得到了最终我们想要的结构，一棵非常抽象（相较于CST）、简化的AST。
 
 可以在[这个网站](https://esprima.org/demo/parse.html?code=const%20square%20%3D%20n%20%3D%3E%20n%20*%20n%3B%0A)，输入随便一段代码，看看对应的tokens与AST。
+
+得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换。。。
 
 ### References
 [Leveling Up One’s Parsing Game With ASTs](https://medium.com/basecs/leveling-up-ones-parsing-game-with-asts-d7a6fc2400ff)
