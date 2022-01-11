@@ -67,7 +67,9 @@ console.log(output.code);
 //   };
 ```
 运行一下这段代码，可以看到在控制台打印出了转换后的代码，`parse`、`traverse`、`generate`分别对应转换过程的三个阶段，下面我尝试讲解下这个三个具体过程。
-`code -> AST -> transformed AST -> transformed code`
+```javascript
+code -> AST -> transformed AST -> transformed code
+```
 
 ### 解析
 
