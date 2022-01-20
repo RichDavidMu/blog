@@ -1,5 +1,5 @@
 ---
-title: Babel原理浅析一
+title: Babel原理浅析一（解析）
 date: 2021-04-01 23:16:10
 index_img: /img/blogCovers/babel.svg
 tags: [JavaScript, Babel, 前端工程化]
@@ -75,7 +75,7 @@ code -> AST -> transformed AST -> transformed code
 
 解析阶段分为两步，词法分析(lexical analysis)、语法分析(syntax analysis)，最终将一个js文件解析成为一棵抽象语法树(AST)。
 
-第一个术语出现了，什么是AST，如果你看过《VS CODE权威指南》，可能对这个词会有点印象，AST会包含分析某段代码所包含的所有必要信息（关键词，变量名，变量值等），并剔除无用信息（标点符号，注释等），眼见为实，先来用babel的解析器生成一棵AST，这部分代码都在[babel/packages/babel-parser](https://github.com/babel/babel/tree/main/packages/babel-parser)中。
+第一个术语出现了，什么是AST，如果你看过《VS CODE权威指南》，可能对这个词会有点印象，AST是一种n叉树表示的数据结构，包含分析源代码的所有必要信息（关键词，变量名，变量值等），是代码的一种抽象表示，方便开发者对代码进行转换操作，编译器可以将代码解析成AST，也可以根据AST重新生成代码，眼见为实，先来用babel的解析器生成一棵AST，这部分代码都在[babel/packages/babel-parser](https://github.com/babel/babel/tree/main/packages/babel-parser)中。
 
 
 我们在test.js中将ast打印出来
@@ -198,7 +198,7 @@ console.log(ast)
 
 可以在[这个网站](https://esprima.org/demo/parse.html?code=const%20square%20%3D%20n%20%3D%3E%20n%20*%20n%3B%0A)，输入随便一段代码，看看对应的tokens与AST。
 
-得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换。。。
+得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换
 
 ### References
 [Leveling Up One’s Parsing Game With ASTs](https://medium.com/basecs/leveling-up-ones-parsing-game-with-asts-d7a6fc2400ff)
