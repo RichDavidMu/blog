@@ -1,5 +1,5 @@
 ---
-title: Babel原理浅析二 (手写一个极简插件)
+title: Babel原理浅析(二): 手写一个极简插件
 date: 2021-04-09 23:16:10
 index_img: /img/blogCovers/babel.svg
 tags: [JavaScript, Babel, 前端工程化]

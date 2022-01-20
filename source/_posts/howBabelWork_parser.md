@@ -200,7 +200,7 @@ console.log(ast)
 
 得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换, 点击前往⬇️
 
-[Babel原理浅析二(手写一个极简插件)](https://luoluoqinghuan.cn/2021/04/09/howTransformBabelAst/)
+[Babel原理浅析(二): 手写一个极简插件](https://luoluoqinghuan.cn/2021/04/09/howTransformBabelAst/)
 
 ### References
 [Leveling Up One’s Parsing Game With ASTs](https://medium.com/basecs/leveling-up-ones-parsing-game-with-asts-d7a6fc2400ff)
