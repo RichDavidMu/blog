@@ -1,5 +1,5 @@
 ---
-title: Babel原理浅析一（解析）
+title: Babel原理浅析(一)：解析
 date: 2021-04-01 23:16:10
 index_img: /img/blogCovers/babel.svg
 tags: [JavaScript, Babel, 前端工程化]
