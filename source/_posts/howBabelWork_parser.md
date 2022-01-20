@@ -198,7 +198,9 @@ console.log(ast)
 
 可以在[这个网站](https://esprima.org/demo/parse.html?code=const%20square%20%3D%20n%20%3D%3E%20n%20*%20n%3B%0A)，输入随便一段代码，看看对应的tokens与AST。
 
-得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换
+得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换, 点击前往⬇️
+
+[Babel原理浅析二(手写一个极简插件)](https://luoluoqinghuan.cn/2021/04/09/howTransformBabelAst/)
 
 ### References
 [Leveling Up One’s Parsing Game With ASTs](https://medium.com/basecs/leveling-up-ones-parsing-game-with-asts-d7a6fc2400ff)
