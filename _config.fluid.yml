@@ -271,7 +271,7 @@ post:
     # 浏览量计数
     # Number of visits
     views:
-      enable: false
+      enable: true
       # 统计数据来源
       # Data Source
       # Options: busuanzi | leancloud
@@ -362,6 +362,21 @@ post:
 
     # See: http://mermaid-js.github.io/mermaid/
     options: { theme: 'default' }
+  
+  comments:
+    enable: true
+    # 指定的插件，需要同时设置对应插件的必要参数
+    # The specified plugin needs to set the necessary parameters at the same time
+    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis
+    type: utterances
+
+utterances:
+  repo: RichDavidMu/blog-comment
+  issue_term: title
+  label: #
+  theme: github-light
+  theme_dark: github-dark
+  crossorigin: anonymous
 
 # Site
 title: David's Space
