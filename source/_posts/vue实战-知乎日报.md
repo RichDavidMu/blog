@@ -7,7 +7,7 @@ categories: [项目实战]
 ---
 
 因为书中的代码比较久远，许多接口、webpack配置都已更新，但这个项目还是很好玩的，本文的代码都是相对于原书代码的补充。
-完整代码:[https://github.com/JohnnyMu/zhihuDaily](https://github.com/JohnnyMu/zhihuDaily)
+完整代码:[https://github.com/RichDavidMu/zhihuDaily](https://github.com/RichDavidMu/zhihuDaily)
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200326213059175.gif#pic_center)
 ## webpack配置
