@@ -1,7 +1,7 @@
 ---
 title: Babel原理浅析(二)： 手写一个极简插件
 date: 2021-04-09 23:16:10
-index_img: /img/blogCovers/babel.svg
+index_img: https://d33wubrfki0l68.cloudfront.net/7a197cfe44548cc1a3f581152af70a3051e11671/78df8/img/babel.svg
 tags: [JavaScript, Babel, 前端工程化]
 categories: [源码解读]
 ---
