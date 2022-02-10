@@ -6,8 +6,6 @@ const bodyParser = require('koa-bodyparser')
 
 const sigHeaderName = 'x-hub-signature-256'
 const sigHashAlg = 'sha256'
-const xGithubHookId = 'x-github-hook-id'
-const xGithubHookInstallationTarget = 'x-github-hook-installation-target-id'
 
 app.use(bodyParser())
 
@@ -25,7 +23,7 @@ const main = ctx => {
 
   console.log('start cmd')
   const cmd = 'git stash && git stash clear && git pull && npm install'
-  const process = child_process.spawn(cmd, {shell: true})
+  const process = child_process.spawnSync(cmd, {shell: true})
   process.stderr.on('data', (data) => {
     console.error(data.toString())
     const response = {code: 500, message: 'update failed'}
@@ -35,7 +33,7 @@ const main = ctx => {
   })
   process.stdout.on('close',()=>{
     const cmd1 = 'hexo clean && hexo generate && pm2 restart all'
-    const process1 = child_process.spawn(cmd1, {shell: true})
+    const process1 = child_process.spawnSync(cmd1, {shell: true})
     process1.stdout.on('close',()=>{
             console.log('hexo blog start !!!!')
             const response = {code: 200, message: 'update successfully'}
