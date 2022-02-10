@@ -14,7 +14,7 @@ app.use(bodyParser())
 const secret = 'm7758521'
 
 const main = ctx => {
-
+  console.log(ctx.request.rawBody)
   const githubSig = ctx.request.headers[`${sigHeaderName}`]
   console.log(githubSig)
   const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
