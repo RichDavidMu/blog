@@ -32,10 +32,10 @@ const main = ctx => {
     return;
   })
   process.stdout.on('close',()=>{
-    const cmd1 = 'hexo clean && hexo generate && pm2 restart all'
+    const cmd1 = 'hexo clean && hexo generate'
     const process1 = child_process.spawnSync(cmd1, {shell: true})
     process1.stdout.on('close',()=>{
-            console.log('hexo blog start !!!!')
+            console.log('hexo blog update successed !!!!')
             const response = {code: 200, message: 'update successfully'}
             ctx.response.body = response
             ctx.status = 200
