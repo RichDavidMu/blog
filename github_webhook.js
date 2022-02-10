@@ -4,8 +4,8 @@ const child_process = require('child_process')
 const crypto = require('crypto')
 const bodyParser = require('koa-bodyparser')
 
-const sigHeaderName = 'x-hub-signature'
-const sigHashAlg = 'sha1'
+const sigHeaderName = 'x-hub-signature-256'
+const sigHashAlg = 'sha256'
 const xGithubHookId = 'x-github-hook-id'
 const xGithubHookInstallationTarget = 'x-github-hook-installation-target-id'
 
@@ -15,13 +15,17 @@ const secret = 'm7758521'
 
 const main = ctx => {
   console.log(ctx.request.rawBody)
-  const githubSig = ctx.request.headers[`${sigHeaderName}`]
-  console.log(githubSig)
-  const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
-  console.log(expectSig)
-  
-    console.log(ctx.request.headers)
-    console.log(ctx.request.body)
+  // const githubSig = ctx.request.headers[`${sigHeaderName}`]
+  // console.log(githubSig)
+  // const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
+  // console.log(expectSig)
+  const sig = Buffer.from(req.get(sigHeaderName) || '', 'utf8')
+  const hmac = crypto.createHmac(sigHashAlg, secret)
+  const digest = Buffer.from(sigHashAlg + '=' + hmac.update(req.rawBody).digest('hex'), 'utf8')
+  if (sig.length !== digest.length || !crypto.timingSafeEqual(digest, sig)) {
+    console.log(`Request body digest (${digest}) did not match ${sigHeaderName} (${sig})`)
+  }
+  console.log(crypto.timingSafeEqual(digest, sig))
 
     console.log('start cmd')
     const cmd = 'git stash && git stash clear && git pull && npm install'
