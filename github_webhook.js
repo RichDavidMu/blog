@@ -22,11 +22,11 @@ const main = ctx => {
   }
 
   console.log('start cmd')
-  const cmd = 'git stash && git stash clear && git pull && npm install'
+  const cmd = 'git stash && git stash clear && git pull'
 
   try{
     const log = child_process.spawnSync(cmd, {shell: true})
-    console.log(log.toString())
+    console.log(log.stdout.toString())
   }catch(e){
     console.error(e.toString())
     const response = {code: 500, message: 'update failed'}
