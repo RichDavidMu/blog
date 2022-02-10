@@ -19,9 +19,9 @@ const main = ctx => {
   // console.log(githubSig)
   // const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
   // console.log(expectSig)
-  const sig = Buffer.from(req.get(sigHeaderName) || '', 'utf8')
+  const sig = Buffer.from(ctx.request.headers[`${sigHeaderName}`] || '', 'utf8')
   const hmac = crypto.createHmac(sigHashAlg, secret)
-  const digest = Buffer.from(sigHashAlg + '=' + hmac.update(req.rawBody).digest('hex'), 'utf8')
+  const digest = Buffer.from(sigHashAlg + '=' + hmac.update(ctx.request.rawBody).digest('hex'), 'utf8')
   if (sig.length !== digest.length || !crypto.timingSafeEqual(digest, sig)) {
     console.log(`Request body digest (${digest}) did not match ${sigHeaderName} (${sig})`)
   }
