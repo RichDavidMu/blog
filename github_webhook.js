@@ -17,7 +17,7 @@ const main = ctx => {
 
   const githubSig = ctx.request.headers[`${sigHeaderName}`]
   console.log(githubSig)
-  const expectSig = crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
+  const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
   console.log(expectSig)
   
     console.log(ctx.request.headers)
