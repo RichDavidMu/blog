@@ -23,27 +23,36 @@ const main = ctx => {
 
   console.log('start cmd')
   const cmd = 'git stash && git stash clear && git pull && npm install'
-  const process = child_process.spawnSync(cmd, {shell: true})
-  process.stderr.on('data', (data) => {
-    console.error(data.toString())
+
+  try{
+    const log = child_process.spawnSync(cmd, {shell: true})
+    console.log(log)
+  }catch(e){
+    console.error(e)
     const response = {code: 500, message: 'update failed'}
     ctx.response.body = response
     ctx.status = 500
     return;
-  })
-  process.stdout.on('close',()=>{
-    const cmd1 = 'hexo clean && hexo generate'
-    const process1 = child_process.spawnSync(cmd1, {shell: true})
-    process1.stdout.on('close',()=>{
-            console.log('hexo blog update successed !!!!')
-            const response = {code: 200, message: 'update successfully'}
-            ctx.response.body = response
-            ctx.status = 200
-            return;
-      })
-    })
-  };
-  
+  }
+
+  const cmd1 = 'hexo clean && hexo generate'
+  try{
+    const log1 = child_process.spawnSync(cmd1, {shell: true})
+    console.log(log1)
+    console.log('hexo blog update successed !!!!')
+    const response = {code: 200, message: 'update successfully'}
+    ctx.response.body = response
+    ctx.status = 200
+    return;
+  }catch(e){
+    console.log(e)
+    console.log('hexo blog update failed !!!!')
+    const response = {code: 500, message: 'failed'}
+    ctx.response.body = response
+    ctx.status = 500
+    return;
+  }
+}
 app.use(main);
 app.listen(1996);
 console.log('github hook server listen at port 1996')
