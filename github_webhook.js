@@ -26,9 +26,9 @@ const main = ctx => {
 
   try{
     const log = child_process.spawnSync(cmd, {shell: true})
-    console.log(log)
+    console.log(log.toString())
   }catch(e){
-    console.error(e)
+    console.error(e.toString())
     const response = {code: 500, message: 'update failed'}
     ctx.response.body = response
     ctx.status = 500
@@ -38,14 +38,14 @@ const main = ctx => {
   const cmd1 = 'hexo clean && hexo generate'
   try{
     const log1 = child_process.spawnSync(cmd1, {shell: true})
-    console.log(log1)
+    console.log(log1.toString())
     console.log('hexo blog update successed !!!!')
     const response = {code: 200, message: 'update successfully'}
     ctx.response.body = response
     ctx.status = 200
     return;
   }catch(e){
-    console.log(e)
+    console.log(e.toString())
     console.log('hexo blog update failed !!!!')
     const response = {code: 500, message: 'failed'}
     ctx.response.body = response
