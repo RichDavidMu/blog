@@ -14,38 +14,34 @@ app.use(bodyParser())
 const secret = 'm7758521'
 
 const main = ctx => {
-  console.log(ctx.request.rawBody)
-  // const githubSig = ctx.request.headers[`${sigHeaderName}`]
-  // console.log(githubSig)
-  // const expectSig = sigHashAlg + '=' + crypto.createHmac(sigHashAlg, secret).update(JSON.stringify(ctx.request.body)).digest('hex')
-  // console.log(expectSig)
   const sig = Buffer.from(ctx.request.headers[`${sigHeaderName}`] || '', 'utf8')
   const hmac = crypto.createHmac(sigHashAlg, secret)
   const digest = Buffer.from(sigHashAlg + '=' + hmac.update(ctx.request.rawBody).digest('hex'), 'utf8')
   if (sig.length !== digest.length || !crypto.timingSafeEqual(digest, sig)) {
     console.log(`Request body digest (${digest}) did not match ${sigHeaderName} (${sig})`)
+    ctx.status = 403
+    return
   }
-  console.log(crypto.timingSafeEqual(digest, sig))
 
-    console.log('start cmd')
-    const cmd = 'git stash && git stash clear && git pull && npm install'
-    const process = child_process.spawn(cmd, {shell: true})
-    process.stderr.on('data', (data) => {
-      console.error(data.toString())
-      const response = {code: 500, message: 'update failed'}
-      ctx.response.body = response
-      ctx.status = 500
-    })
-    process.stdout.on('close',()=>{
-      const cmd1 = 'hexo clean && hexo generate && pm2 restart all'
-      console.log(cmd1)
-      const process1 = child_process.spawn(cmd1, {shell: true})
-      process1.stdout.on('close',()=>{
-              console.log('hexo blog start !!!!')
-              const response = {code: 200, message: 'update successfully'}
-              ctx.response.body = response
-              ctx.status = 200
-              return ctx;
+  console.log('start cmd')
+  const cmd = 'git stash && git stash clear && git pull && npm install'
+  const process = child_process.spawn(cmd, {shell: true})
+  process.stderr.on('data', (data) => {
+    console.error(data.toString())
+    const response = {code: 500, message: 'update failed'}
+    ctx.response.body = response
+    ctx.status = 500
+    return;
+  })
+  process.stdout.on('close',()=>{
+    const cmd1 = 'hexo clean && hexo generate && pm2 restart all'
+    const process1 = child_process.spawn(cmd1, {shell: true})
+    process1.stdout.on('close',()=>{
+            console.log('hexo blog start !!!!')
+            const response = {code: 200, message: 'update successfully'}
+            ctx.response.body = response
+            ctx.status = 200
+            return;
       })
     })
   };
