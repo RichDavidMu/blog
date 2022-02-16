@@ -22,7 +22,7 @@ const main = ctx => {
   }
 
   console.log('start cmd')
-  const cmd = 'git checkout . && git pull'
+  const cmd = 'git checkout && git pull'
 
   try{
     const log = child_process.spawnSync(cmd, {shell: true})
