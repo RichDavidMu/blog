@@ -85,7 +85,7 @@ const main = ctx => {
 
   console.log('start cmd')
   // 拉取最新代码
-  const cmd = 'git stash && git stash clear && git pull'
+  const cmd = 'git checkout . && git pull'
 
   try{
     const log = child_process.spawnSync(cmd, {shell: true})
