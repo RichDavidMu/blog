@@ -81,13 +81,13 @@ export default function Sub() {
 ## 原理浅析
 其实原理也不复杂，使用了`useContext`的特性，但看过源码后，发现直接想的一些细节很妙。
 我们可以先想一下，实现一个`useSelector`有哪些问题需要解决：
-+ 如何获取`store`
++ `useSelector`如何获取`store`
 + 如何知道`store`中的`state`已经变了
 + 如何触发组件re-render
 + 如何记录变化前的`state`
 + 如何返回用户希望拿到的`state`
 
-第一个问题最简单，直接使用`useContext`就可以拿到。怎么知道`state`已经变了呢，这里我一开始有个误区，以为直接把`store`放到`useEffect`的依赖里，他只要一变，我就用`store.getState()`重新获取。可问题是`store`会变吗，答案是不会，`stor`e是一个对象，只要`store`通过`createStore()`创建，这个对象的引用就不会变。
+第一个问题最简单，直接使用`useContext`就可以拿到。怎么知道`state`已经变了呢，这里我一开始有个误区，以为直接把`store`或者把`store.getState()`获取的`state`放到`useEffect`的依赖里就可以知道了。可问题是`store`会变吗，答案是不会，`store`是一个对象，只要`store`通过`createStore()`创建，这个对象的引用就不会变。`state`确实会变，但这个变化react可以知道吗，`state`只是一个值，是一个闭包，而不是react通过`useState`创建的，react是不知道他是否变化的，换句话说`state`改变时不会通知react。
 
 那么如何解决呢，答案就在谜面上，在`store.subscribe()`里订阅就可以了，我们可以在回调函数中比较变化前后的`state`，去触发更新。
 
