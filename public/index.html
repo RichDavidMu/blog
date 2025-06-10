@@ -1,0 +1,998 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="David&#39;s Blog">
+<meta property="og:url" content="https://luoluoqinghuan.cn/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="DavidMu">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 100vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav4.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="都说帅的人说话只说一半，简直是在放. . .">
+              
+            </span>
+
+            
+          </div>
+
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          style=margin-top:0>
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/02/15/useSelector%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91%E6%9B%B4%E6%96%B0%E7%9A%84%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84useSelector/" target="_self">
+          <img src="https://d33wubrfki0l68.cloudfront.net/0834d0215db51e91525a25acf97433051f280f2f/c30f5/img/redux.svg" srcset="/img/loading.gif" lazyload alt="useSelector是如何触发更新的以及手写一个简单的useSelector">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/02/15/useSelector%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91%E6%9B%B4%E6%96%B0%E7%9A%84%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84useSelector/" target="_self">
+          useSelector是如何触发更新的以及手写一个简单的useSelector
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/02/15/useSelector%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91%E6%9B%B4%E6%96%B0%E7%9A%84%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84useSelector/" target="_self">
+          
+          
+            
+          
+          概述useSelector是react-redux@7中加入的hook，可以在不使用connect()的情况下将函数组件连接到redux，这样代码写起来会更加清晰，更加方便。
+使用起来也很简单，我们写一个简单的加减数组件来看一下
+12345678910111213141516171819202122232425262728// index.tsximport React from &#x27;re
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-02-15 18:04" pubdate>
+              2022-02-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/redux/">redux</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_self">
+          <img src="https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg" srcset="/img/loading.gif" lazyload alt="Hexo博客使用Github_Webhook自动部署到个人服务器">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_self">
+          Hexo博客使用Github_Webhook自动部署到个人服务器
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_self">
+          
+          
+            
+          
+          最近想把之前写的博客重新注册一个域名放到网上，地址：https://luoluoqinghuan.cn/。博客框架使用的是hexo，部署到服务器上也很简单，把hexo生成的网站文件放在服务器上，用koa-static起一个服务就行了。
+但这是一种非常麻烦的部署方式，每次更新博客都要登陆服务器手动上传，如果想要自动更新网站就要解决两个问题：
+
+从哪里拿到最新的代码（github）
+如何知道代码已经更
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-02-10 11:16" pubdate>
+              2022-02-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/CI-CD/">CI/CD</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+            
+              <a href="/tags/hexo/">hexo</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/04/09/howTransformBabelAst/" target="_self">
+          <img src="https://d33wubrfki0l68.cloudfront.net/7a197cfe44548cc1a3f581152af70a3051e11671/78df8/img/babel.svg" srcset="/img/loading.gif" lazyload alt="Babel原理浅析(二)： 手写一个极简插件">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/09/howTransformBabelAst/" target="_self">
+          Babel原理浅析(二)： 手写一个极简插件
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/04/09/howTransformBabelAst/" target="_self">
+          
+          
+            
+          
+          我们在上文中已经了解到babel的第一步，将代码解析成AST，接下来的两步就比较好理解了，转换与生成。我再看最开始的代码。
+123456789101112131415161718192021222324252627282930const &#123; parse &#125; = require(&quot;./packages/babel-parser&quot;);const traverse
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-09 23:16" pubdate>
+              2021-04-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/Babel/">Babel</a>
+            
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/04/01/howBabelWork_parser/" target="_self">
+          <img src="https://d33wubrfki0l68.cloudfront.net/7a197cfe44548cc1a3f581152af70a3051e11671/78df8/img/babel.svg" srcset="/img/loading.gif" lazyload alt="Babel原理浅析(一)：解析">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/01/howBabelWork_parser/" target="_self">
+          Babel原理浅析(一)：解析
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/04/01/howBabelWork_parser/" target="_self">
+          
+          
+            
+          
+          概述babel可以将ECMAScript2015+的语法，编译成ES5的语法，如：
+1const square = n =&gt; n * n;
+转换为
+12345&quot;use strict&quot;;var square = function square(n) &#123;  return n * n;&#125;;
+可以在babel repl进行尝试。
+babel是如何做到的呢
+最自
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-01 23:16" pubdate>
+              2021-04-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/Babel/">Babel</a>
+            
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/19/vue%E5%AE%9E%E6%88%98-%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/" target="_self">
+          <img src="/img/blogCovers/blog-post2.png" srcset="/img/loading.gif" lazyload alt="Vue实战：实现一个博客系统">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/04/19/vue%E5%AE%9E%E6%88%98-%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/" target="_self">
+          Vue实战：实现一个博客系统
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/04/19/vue%E5%AE%9E%E6%88%98-%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/" target="_self">
+          
+          
+            
+          
+          最近想结合所学写一个项目，最后决定写一个博客系统，使用的技术栈为：
+前端：Vue Vue-router element-ui 
+后端：express moogose jsonwebtoken
+使用了vue-cli搭建项目
+仓库地址： https://github.com/RichDavidMu/vue-blog-master
+主页：
+文章详情页：后台管理页面：
+文章编辑页：
+markdown实时预
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-19 23:18" pubdate>
+              2020-04-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Vue/">Vue</a>
+            
+              <a href="/tags/Webpack/">Webpack</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/01/eventLoop%E7%90%86%E8%A7%A3/" target="_self">
+          <img src="/img/blogCovers/blog-post6.png" srcset="/img/loading.gif" lazyload alt="EventLoop理解">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/04/01/eventLoop%E7%90%86%E8%A7%A3/" target="_self">
+          EventLoop理解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/04/01/eventLoop%E7%90%86%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          不多说，大家先看一段代码
+12345678910111213console.log(&#x27;script start&#x27;);setTimeout(function() &#123;  console.log(&#x27;setTimeout&#x27;);&#125;, 0);Promise.resolve().then(function() &#123;  console.log(&
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-01 23:16" pubdate>
+              2020-04-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">异步编程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/28/vue%E5%AE%9E%E6%88%98%E8%B8%A9%E5%9D%91-%E9%98%B2%E7%9B%97%E9%93%BE/" target="_self">
+          <img src="/img/blogCovers/blog-post5.jpg" srcset="/img/loading.gif" lazyload alt="踩坑日记：防盗链与x-tengine-error:denied by Referer ACL">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/03/28/vue%E5%AE%9E%E6%88%98%E8%B8%A9%E5%9D%91-%E9%98%B2%E7%9B%97%E9%93%BE/" target="_self">
+          踩坑日记：防盗链与x-tengine-error:denied by Referer ACL
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/03/28/vue%E5%AE%9E%E6%88%98%E8%B8%A9%E5%9D%91-%E9%98%B2%E7%9B%97%E9%93%BE/" target="_self">
+          
+          
+            
+          
+          踩坑之前的写的知乎日报项目https://blog.csdn.net/johnny_mu/article/details/105128678
+客户端曾爆出了这个403错误
+
+看起来好像是css文件被跨域限制了，无法引用。那就用之前图片的代理服务器转发一下就好了。
+
+我一开始以为是跨域限制导致的css文件无法加载，所以用代理服务器转发一下，设置上相应header字段就好，问题确实就解决了。但是昨晚睡
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-28 23:14" pubdate>
+              2020-03-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/http/">http</a>
+            
+              <a href="/tags/NodeJs/">NodeJs</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/22/vue%E5%AE%9E%E6%88%98-%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5/" target="_self">
+          <img src="/img/blogCovers/blog-post4.jpg" srcset="/img/loading.gif" lazyload alt="Vue实战：知乎日报2.0">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/03/22/vue%E5%AE%9E%E6%88%98-%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5/" target="_self">
+          Vue实战：知乎日报2.0
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/03/22/vue%E5%AE%9E%E6%88%98-%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5/" target="_self">
+          
+          
+            
+          
+          因为书中的代码比较久远，许多接口、webpack配置都已更新，但这个项目还是很好玩的，本文的代码都是相对于原书代码的补充。完整代码:https://github.com/RichDavidMu/zhihuDaily
+
+webpack配置虽然最新的webpack已经是4.0版本。但与书中的webpack2大多能兼容，只有几个地方稍有变化
+vue-loader&#x76;&#x75;&#101;&#4
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-22 23:11" pubdate>
+              2020-03-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Vue/">Vue</a>
+            
+              <a href="/tags/Webpack/">Webpack</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/10/promise%E8%AF%A6%E8%A7%A3/" target="_self">
+          <img src="/img/blogCovers/blog-post1.jpg" srcset="/img/loading.gif" lazyload alt="promise详解(promise.all实现、promise.race实现)">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/03/10/promise%E8%AF%A6%E8%A7%A3/" target="_self">
+          promise详解(promise.all实现、promise.race实现)
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/03/10/promise%E8%AF%A6%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          promise解决了什么问题JavaScript是单线程的，所以我们要用一些异步编程方案来实现异步。回调函数就是其中的一种方案，比如说在node中写读取一个文件，使用回调函数这是没有问题的。
+1234fs.readFile(&#x27;/etc/passwd&#x27;, function (err, data) &#123;  if (err) throw err;  console.log(d
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-10 23:08" pubdate>
+              2020-03-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">异步编程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/02/%E5%90%8C%E6%BA%90%E9%99%90%E5%88%B6%E7%90%86%E8%A7%A3%E4%B8%8E%E8%A7%A3%E5%86%B3/" target="_self">
+          <img src="/img/blogCovers/blog-post3.jpg" srcset="/img/loading.gif" lazyload alt="同源限制理解与解决">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/03/02/%E5%90%8C%E6%BA%90%E9%99%90%E5%88%B6%E7%90%86%E8%A7%A3%E4%B8%8E%E8%A7%A3%E5%86%B3/" target="_self">
+          同源限制理解与解决
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/03/02/%E5%90%8C%E6%BA%90%E9%99%90%E5%88%B6%E7%90%86%E8%A7%A3%E4%B8%8E%E8%A7%A3%E5%86%B3/" target="_self">
+          
+          
+            
+          
+          同源策略是对JavaScript代码能够操作哪些web内容的一条完整的安全限制。
+什么是同源URL由协议、域名、端口和路径组成，如果两个URL的协议、域名和端口相同，则表示他们同源。下表给出了相对http://store.company.com/dir/page.html同源检测的示例:
+
+
+
+URL
+结果
+原因
+
+
+
+http://store.company.com/dir2/other.htm
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-02 23:05" pubdate>
+              2020-03-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+              <a href="/tags/http/">http</a>
+            
+              <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

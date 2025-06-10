@@ -1,0 +1,693 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="同源策略是对JavaScript代码能够操作哪些web内容的一条完整的安全限制。 什么是同源URL由协议、域名、端口和路径组成，如果两个URL的协议、域名和端口相同，则表示他们同源。下表给出了相对http:&#x2F;&#x2F;store.company.com&#x2F;dir&#x2F;page.html同源检测的示例:    URL 结果 原因    http:&#x2F;&#x2F;store.company.com&#x2F;dir2&#x2F;other.htm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="同源限制理解与解决">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2020/03/02/%E5%90%8C%E6%BA%90%E9%99%90%E5%88%B6%E7%90%86%E8%A7%A3%E4%B8%8E%E8%A7%A3%E5%86%B3/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="同源策略是对JavaScript代码能够操作哪些web内容的一条完整的安全限制。 什么是同源URL由协议、域名、端口和路径组成，如果两个URL的协议、域名和端口相同，则表示他们同源。下表给出了相对http:&#x2F;&#x2F;store.company.com&#x2F;dir&#x2F;page.html同源检测的示例:    URL 结果 原因    http:&#x2F;&#x2F;store.company.com&#x2F;dir2&#x2F;other.htm">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200216152224507.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200216161317768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-03-02T15:05:42.000Z">
+<meta property="article:modified_time" content="2022-01-10T08:41:39.737Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="http">
+<meta property="article:tag" content="浏览器">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200216152224507.png">
+  
+  <title>同源限制理解与解决 - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="同源限制理解与解决">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-02 23:05" pubdate>
+        March 2, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">同源限制理解与解决</h1>
+            
+            <div class="markdown-body">
+              <p>同源策略是对JavaScript代码能够操作哪些web内容的一条完整的安全限制。</p>
+<h3 id="什么是同源"><a href="#什么是同源" class="headerlink" title="什么是同源"></a>什么是同源</h3><p>URL由协议、域名、端口和路径组成，如果两个URL的协议、域名和端口相同，则表示他们同源。<br>下表给出了相对<code>http://store.company.com/dir/page.html</code>同源检测的示例:</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>结果</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir2/other.html">http://store.company.com/dir2/other.html</a></td>
+<td>成功</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com/dir/inner/another.html">http://store.company.com/dir/inner/another.html</a></td>
+<td>成功</td>
+<td>只有路径不同</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://store.company.com/secure.html">https://store.company.com/secure.html</a></td>
+<td>失败</td>
+<td>不同协议 ( https和http )</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://store.company.com:81/dir/etc.html">http://store.company.com:81/dir/etc.html</a></td>
+<td>失败</td>
+<td>不同端口 ( http:// 80是默认的)</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://news.company.com/dir/other.html">http://news.company.com/dir/other.html</a></td>
+<td>失败</td>
+<td>不同域名 ( news和store )</td>
+</tr>
+</tbody></table>
+<h3 id="同源策略阻止什么"><a href="#同源策略阻止什么" class="headerlink" title="同源策略阻止什么"></a>同源策略阻止什么</h3><p>同源策略最初由网景公司添加到浏览器，当前所有的浏览器都支持此功能。</p>
+<p>初始的功能是为了限制非同域网页之间cookie的访问，例如a.html页面无法访问非同域的b.html页面的cookie。</p>
+<p> 功能是为了保护网站信息安全，比如，一个电脑可以访问很多网站，总不能此网站可以读取另一个网站的信息，尤其是涉及到重要信息，比如用户名和密码。</p>
+<p>随着浏览器功能的增强，同源策略由最初限制cookie的访问，发展到限制多种本地信息:</p>
+<ul>
+<li><p> Cookie、LocalStorage 和 IndexedDB访问限制。<br>a.html的脚本无法访问b.html页面下的上述种类浏览器缓存，为了防止恶意网站通过js获取用户其他网站的cookie。</p>
+</li>
+<li><p>DOM获取限制。<br>在浏览器中，<code>&lt;script&gt;</code>、<code>&lt;img&gt;</code>、<code>&lt;iframe&gt;</code>、<code>&lt;link&gt;</code>等含有<code>src</code>属性的标签都可以加载跨域资源，而不受同源限制，但浏览器限制了JavaScript的权限使其不能读、写加载的内容。<br>如果没有这一条，恶意网站可以通过iframe打开银行页面，可以获取dom就相当于可以获取整个银行页面的信息。</p>
+</li>
+<li><p>限制 ajax 请求，准确来说是限制操作 ajax 响应结果，本质上跟上一条是一样的</p>
+<blockquote>
+<p>假设有一个黑客叫做小黑，他从网上抓取了一堆美女图做了一个网站，每日访问量爆表。<br>为了维护网站运行，小黑挂了一张收款码，觉得网站不错的可以适当资助一点，可是无奈伸手党太多，小黑的网站入不敷出。<br>于是他非常生气的在网页中写了一段js代码，使用ajax向淘宝发起登陆请求，因为很多数人都访问过淘宝，所以电脑中存有淘宝的cookie，不需要输入账号密码直接就自动登录了，然后小黑在ajax回调函数中解析了淘宝返回的数据，得到了很多人的隐私信息，转手一卖，小黑的网站终于盈利了。<br>如果跨域也可以发送AJAX请求的话，小黑就真的获取到了用户的隐私并成功获利了！！！</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="同源策略允许什么"><a href="#同源策略允许什么" class="headerlink" title="同源策略允许什么"></a>同源策略允许什么</h3><ul>
+<li>同源策略只对网页的HTML文档做了限制，对加载的其他静态资源如javascript、css、图片等仍然认为属于同源。</li>
+<li>页面中的<code>&lt;script&gt;</code>、<code>&lt;img&gt;</code>、<code>&lt;ifram&gt;</code>、<code>&lt;link&gt;</code>等标签、重定向以及表单提交是不会受到同源策略限制的，比如在网站<code>www.foo.com</code>下提交一个表单到<code>www.bar.com</code>是完全可以的。</li>
+<li>跨域资源嵌入是允许的。<br>脚本本身的来源和同源策略并不相关，相关的是脚本所嵌入的文档的来源，理解这一点很重要。例如、假设一个来自主机A的脚本被包含到（使用<code>&lt;script&gt;</code>标记的src属性）宿主B的一个web页面中。这个脚本的来源就是主机B而不是A，并且可以完整的访问包含它的文档内容。如果脚本打开一个新的窗口载入来自主机B的另一个文档，脚本对这个文档的内容也完全具有访问权限。但是，如果脚本打开第三个窗口并载入一个来自主机C吃文档（或者是主机A），同源策略会发挥作用，阻止脚本访问这个文档。<h3 id="如何跨域"><a href="#如何跨域" class="headerlink" title="如何跨域"></a>如何跨域</h3></li>
+</ul>
+<p>1.iframe跨域 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/happy-8090/p/11570998.html">参考happy哥</a></p>
+<ul>
+<li><p><code>document.domain</code>跨域</p>
+<p>  <strong>此方案仅限主域相同，子域不同的跨域应用场景。</strong></p>
+<p>  同源策略会给那些使用多个子域的大站点带来一些问题。如，来自<code>home.example.com</code>的文档里脚本想要合法的读取从<code>developer.example.com</code>上的文档的属性。为了支持这种类型的多域名站点，可以使用Document对象的<code>domain</code>属性。在默认情况下，属性<code>domain</code>存放的是载入文档的服务器的主机名。可以设置这一个属性，不过字符串必须具有有效的域前缀或他本身。因此，如果一个<code>domain</code>属性的初始值是字符串<code>home.example.com</code>，就可以把它设置为<code>example.com</code>。但是不能设置为<code>home.example</code>或者<code>ample.com</code>。另外<code>domain</code>值中必须有一个.，不能把它设置为<code>com</code>或其他顶级域名。如果两个窗口（或窗体）包含的脚本把domain设置成了相同的值，那么这两个窗口就不会再受同源策略的约束。<br>  在<code>home.example.com</code>和<code>developer.example.com</code>的文档同时使用脚本设置</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">document</span>.domain = <span class="hljs-string">&#x27;example.com&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>  实现跨域，<strong>cookie</strong>也可以用这种方法实现跨域</p>
+</li>
+</ul>
+<ul>
+<li><p><code>location.hash</code> 跨域<br>当主域不同时，可以使用此方法<br>在url中，<code>http://www.baidu.com#helloword</code>的<code>#helloworad</code>就是<code>location.hash</code>，改变hash值不会导致页面刷新，所以可以利用hash值来进行数据的传递，当然数据量是有限的。<br>父窗口可以把信息，写入子窗口的<code>location.hash</code>。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> src = originURL + <span class="hljs-string">&#x27;#&#x27;</span> + data;<br><span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;myIFrame&#x27;</span>).src = src;<br></code></pre></td></tr></table></figure>
+<p>  子窗口通过监听<code>hashchange</code>事件得到通知。</p>
+</li>
+</ul>
+<pre><code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">window</span>.onhashchange = checkMessage;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkMessage</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> message = <span class="hljs-built_in">window</span>.location.hash;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+同样的，子窗口也可以改变父窗口的片段标识符。
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">parent.location.href= target + <span class="hljs-string">&quot;#&quot;</span> + hash;<br></code></pre></td></tr></table></figure>
+</code></pre>
+<ul>
+<li><p><code>window.name</code>跨域<br><code>window.name</code>（一般在js代码里出现）的值不是一个普通的全局变量，而是当前窗口的名字，要注意的是每个iframe都有包裹它的window，而这个window是top window的子窗口，而它自然也有window.name的属性，window.name属性的神奇之处在于name值在不同的页面（甚至不同域名）加载后依旧存在（如果没有修改则值不会变化），并且可以支持非常长的name值（2MB）<br>举个简单的例子：你在某个页面的控制台输入：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">window</span>.name = <span class="hljs-string">&quot;hello world&quot;</span><br><span class="hljs-built_in">window</span>.location = <span class="hljs-string">&quot;http://www.baidu.com&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>  页面跳转到了百度首页<br>  <img src="https://img-blog.csdnimg.cn/20200216152224507.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>  但是<code>window.name</code>却被保存下来了，还是<code>hello world</code>。</p>
+<blockquote>
+<p>这种方法的优点是，window.name容量很大，可以放置非常长的字符串；缺点是必须监听子窗口window.name属性的变化，影响网页性能。</p>
+</blockquote>
+</li>
+<li><p>跨文本消息 <code>postMessage</code><br><code>postMessage</code> 是 HTML5 新增加的一项功能，跨文档消息传输(Cross Document Messaging)，目前：Chrome 2.0+、Internet Explorer 8.0+, Firefox 3.0+, Opera 9.6+, 和 Safari 4.0+ 都支持这项功能。<br>举例来说，父窗口<code>http://aaa.com</code>向子窗口<code>http://bbb.com</code>发消息，调用<code>postMessage</code>方法就可以了。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> popup = <span class="hljs-built_in">window</span>.open(<span class="hljs-string">&#x27;http://bbb.com&#x27;</span>, <span class="hljs-string">&#x27;title&#x27;</span>);<br>popup.postMessage(<span class="hljs-string">&#x27;Hello World!&#x27;</span>, <span class="hljs-string">&#x27;http://bbb.com&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>  子窗口向父窗口发送消息的写法类似。</p>
+</li>
+</ul>
+<pre><code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">window</span>.opener.postMessage(<span class="hljs-string">&#x27;Nice to see you&#x27;</span>, <span class="hljs-string">&#x27;http://aaa.com&#x27;</span>);<br></code></pre></td></tr></table></figure>
+父窗口和子窗口都可以通过message事件，监听对方的消息。
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;message&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>&#123;<br><span class="hljs-built_in">console</span>.log(e.data);<br>&#125;,<span class="hljs-literal">false</span>);<br></code></pre></td></tr></table></figure>
+message事件的事件对象event，提供以下三个属性。
+
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mel"><span class="hljs-keyword">event</span>.<span class="hljs-keyword">source</span>：发送消息的窗口<br><span class="hljs-keyword">event</span>.origin: 消息发向的网址<br><span class="hljs-keyword">event</span>.data: 消息内容<br></code></pre></td></tr></table></figure>
+</code></pre>
+<ol start="2">
+<li>Ajax跨域</li>
+</ol>
+<ul>
+<li><p>Jsonp<br>JSONP是服务器与客户端跨源通信的常用方法。最大特点就是简单适用，老式浏览器全部支持，服务器改造非常小。</p>
+<p>  它的基本思想是，网页通过添加一个<code>&lt;script&gt;</code>元素，向服务器请求JSON数据，这种做法不受同源政策限制；服务器收到请求后，将数据放在一个指定名字的回调函数里传回来。</p>
+<p>  首先，网页动态插入<code>&lt;script&gt;</code>元素，由它向跨源网址发出请求。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addScriptTag</span>(<span class="hljs-params">src</span>) </span>&#123;<span class="hljs-comment">//定义添加script标签函数</span><br><span class="hljs-keyword">var</span> script = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;script&#x27;</span>);<br>script.setAttribute(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;text/javascript&quot;</span>);<br>script.src = src;<br><span class="hljs-built_in">document</span>.body.appendChild(script);<br>&#125;<br><span class="hljs-built_in">window</span>.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<span class="hljs-comment">//当文档加载完成时，发送Jsonp请求</span><br>  addScriptTag(<span class="hljs-string">&#x27;http://example.com/ip?code=123&amp;callback=foo&#x27;</span>);<br>  <span class="hljs-comment">//url中包含code需要的数据，与需要的回调函数callback</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">data</span>) </span>&#123;<span class="hljs-comment">//回调函数，当数据返回时，调用</span><br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Your public IP address is: &#x27;</span> + data.ip);<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>  上面代码通过动态添加<code>&lt;script&gt;</code>元素，向服务器example.com发出请求。注意，该请求的查询字符串有一个callback参数，用来指定回调函数的名字，这对于JSONP是必需的。<br>  服务器收到这个请求以后，会将数据放在回调函数的参数位置返回。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">foo(&#123;<br>    <span class="hljs-string">&quot;ip&quot;</span>: <span class="hljs-string">&quot;8.8.8.8&quot;</span><br>&#125;);<br></code></pre></td></tr></table></figure>
+<p>  由于<code>&lt;script&gt;</code>元素请求的脚本，直接作为代码运行。这时，只要浏览器定义了foo函数，该函数就会立即调用。</p>
+</li>
+<li><p>CORS跨域资源共享<br>CORS的主要工作在后端，是HTML5规范定义的如何跨域访问资源。<br>Origin表示本域，也就是浏览器当前页面的域。当JavaScript向外域（如sina.com）发起请求后，浏览器收到响应后，首先检查Access-Control-Allow-Origin是否包含本域，如果是，则此次跨域请求成功，如果不是，则请求失败，JavaScript将无法获取到响应的任何数据。<br>用一个图来表示就是：<br><img src="https://img-blog.csdnimg.cn/20200216161317768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>假设本域是<code>my.com</code>，外域是<code>sina.com</code>，只要响应头<code>Access-Control-Allow-Origin</code>为<code>http://my.com</code>，或者是<code>*</code>，本次请求就可以成功。</p>
+<p>  可见，跨域能否成功，取决于对方服务器是否愿意给你设置一个正确的<code>Access-Control-Allow-Origin</code>，决定权始终在对方手中。</p>
+<p>  上面这种跨域请求，称之为“简单请求”。简单请求包括GET、HEAD和POST（POST的Content-Type类型 仅限<code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>和<code>text/plain</code>），并且不能出现任何自定义头（例如，X-Custom: 12345），通常能满足90%的需求。</p>
+<p>  无论你是否需要用JavaScript通过CORS跨域请求资源，你都要了解CORS的原理。最新的浏览器全面支持HTML5。在引用外域资源时，除了JavaScript和CSS外，都要验证CORS。例如，当你引用了某个第三方CDN上的字体文件时：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/* CSS */</span><br>@font-face &#123;<br>  font-family: <span class="hljs-string">&#x27;FontAwesome&#x27;</span>;<br>  src: url(<span class="hljs-string">&#x27;http://cdn.com/fonts/fontawesome.ttf&#x27;</span>) format(<span class="hljs-string">&#x27;truetype&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>  如果该CDN服务商未正确设置<code>Access-Control-Allow-Origin</code>，那么浏览器无法加载字体资源。</p>
+<p>  对于<code>PUT</code>、<code>DELETE</code>以及其他类型如<code>application/json</code>的POST请求，在发送AJAX请求之前，浏览器会先发送一个OPTIONS请求（称为preflighted请求）到这个URL上，询问目标服务器是否接受：</p>
+  <figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs oxygene">OPTIONS /path/<span class="hljs-keyword">to</span>/resource HTTP/<span class="hljs-number">1.1</span><br>Host: bar.com<br>Origin: http:<span class="hljs-comment">//my.com</span><br>Access-Control-Request-<span class="hljs-function"><span class="hljs-keyword">Method</span>:</span> POST<br></code></pre></td></tr></table></figure>
+
+<p>  服务器必须响应并明确指出允许的Method：</p>
+  <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-meta">HTTP/1.1</span> <span class="hljs-number">200</span> OK<br><span class="hljs-attribute">Access-Control-Allow-Origin</span><span class="hljs-punctuation">: </span>http://my.com<br><span class="hljs-attribute">Access-Control-Allow-Methods</span><span class="hljs-punctuation">: </span>POST, GET, PUT, OPTIONS<br><span class="hljs-attribute">Access-Control-Max-Age</span><span class="hljs-punctuation">: </span>86400<br></code></pre></td></tr></table></figure>
+
+<p>  浏览器确认服务器响应的<code>Access-Control-Allow-Methods</code>头确实包含将要发送的AJAX请求的Method，才会继续发送AJAX，否则，抛出一个错误。</p>
+<p>  由于以POST、PUT方式传送JSON格式的数据在REST中很常见，所以要跨域正确处理POST和PUT请求，服务器端必须正确响应OPTIONS请求。</p>
+</li>
+</ul>
+<ol start="4">
+<li>cookie跨域 </li>
+</ol>
+<ul>
+<li><p>document.domain跨域，与iframe类似</p>
+</li>
+<li><p>Jsonp跨域</p>
+</li>
+<li><p>Ajax+cors跨域<br>默认情况下，标准的跨域请求是不会发送不同源的cookie的</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();<br>xhr.withCredentials = <span class="hljs-literal">true</span>;<br></code></pre></td></tr></table></figure>
+<p>  为了安全，标准里不允许 <code>Access-Control-Allow-Origin: *</code>，<code>*</code>必须指定明确的、与请求网页一致的域名。</p>
+</li>
+</ul>
+<ol start="5">
+<li>LocalStorage跨域</li>
+</ol>
+<ul>
+<li>postMessage</li>
+</ul>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hansexploration/article/details/80314948">https://blog.csdn.net/hansexploration/article/details/80314948</a><br><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html">http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html</a><br><a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1022910821149312/1023022332902400">https://www.liaoxuefeng.com/wiki/1022910821149312/1023022332902400</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/shuidinaozhongyan/article/details/78155310">https://blog.csdn.net/shuidinaozhongyan/article/details/78155310</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/chou_out_man/article/details/80664413">https://blog.csdn.net/chou_out_man/article/details/80664413</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/itcats_cn/article/details/82318092">https://blog.csdn.net/itcats_cn/article/details/82318092</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/happy-8090/p/11570998.html">https://www.cnblogs.com/happy-8090/p/11570998.html</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/http/">http</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/03/10/promise%E8%AF%A6%E8%A7%A3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">promise详解(promise.all实现、promise.race实现)</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/02/12/Javascript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/">
+                        <span class="hidden-mobile">Javascript学习笔记二</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

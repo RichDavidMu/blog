@@ -1,0 +1,573 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="踩坑之前的写的知乎日报项目https:&#x2F;&#x2F;blog.csdn.net&#x2F;johnny_mu&#x2F;article&#x2F;details&#x2F;105128678 客户端曾爆出了这个403错误  看起来好像是css文件被跨域限制了，无法引用。那就用之前图片的代理服务器转发一下就好了。  我一开始以为是跨域限制导致的css文件无法加载，所以用代理服务器转发一下，设置上相应header字段就好，问题确实就解决了。但是昨晚睡">
+<meta property="og:type" content="article">
+<meta property="og:title" content="踩坑日记：防盗链与x-tengine-error:denied by Referer ACL">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2020/03/28/vue%E5%AE%9E%E6%88%98%E8%B8%A9%E5%9D%91-%E9%98%B2%E7%9B%97%E9%93%BE/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="踩坑之前的写的知乎日报项目https:&#x2F;&#x2F;blog.csdn.net&#x2F;johnny_mu&#x2F;article&#x2F;details&#x2F;105128678 客户端曾爆出了这个403错误  看起来好像是css文件被跨域限制了，无法引用。那就用之前图片的代理服务器转发一下就好了。  我一开始以为是跨域限制导致的css文件无法加载，所以用代理服务器转发一下，设置上相应header字段就好，问题确实就解决了。但是昨晚睡">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200328193008768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200328193649824.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200328194744609.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200328200214620.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020032820280853.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200328202537488.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-03-28T15:14:16.000Z">
+<meta property="article:modified_time" content="2022-01-10T08:41:39.737Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="http">
+<meta property="article:tag" content="NodeJs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200328193008768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70#pic_center">
+  
+  <title>踩坑日记：防盗链与x-tengine-error:denied by Referer ACL - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="踩坑日记：防盗链与x-tengine-error:denied by Referer ACL">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-28 23:14" pubdate>
+        March 28, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      5 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">踩坑日记：防盗链与x-tengine-error:denied by Referer ACL</h1>
+            
+            <div class="markdown-body">
+              <h2 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h2><p>之前的写的知乎日报项目<a target="_blank" rel="noopener" href="https://blog.csdn.net/johnny_mu/article/details/105128678">https://blog.csdn.net/johnny_mu/article/details/105128678</a></p>
+<p>客户端曾爆出了这个403错误</p>
+<blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20200328193008768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>看起来好像是css文件被跨域限制了，无法引用。那就用之前图片的代理服务器转发一下就好了。</p>
+</blockquote>
+<p>我一开始以为是跨域限制导致的css文件无法加载，所以用代理服务器转发一下，设置上相应header字段就好，问题确实就解决了。<br>但是昨晚睡前一想，不对啊，css，图片等静态资源是不会被跨域限制的。于是我试了一下真正跨域限制的报错。果然不一样。<br><img src="https://img-blog.csdnimg.cn/20200328193649824.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>再试一下，将图片代理服务器中的取消跨域限制的代码注释掉</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">res.setHeader(<span class="hljs-string">&#x27;Content-Type&#x27;</span>, contentType);<br>         <span class="hljs-comment">// res.setHeader(&#x27;Access-Control-Allow-Origin&#x27;, &#x27;*&#x27;);</span><br>         res.end(body);<br></code></pre></td></tr></table></figure>
+<p>重新打开网页，没有任何变化，完美运行。<br>说明之前的bug不是因为跨域产生的，那是因为什么呢。<br>打开控制台看一下请求这个css文件时的network，发现了问题<br><img src="https://img-blog.csdnimg.cn/20200328194744609.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>在回复头字段里多了一个<code>x-tengine-error</code>，这是什么鬼，百度了一下，明白了，这是因为防盗链检测所出现的<code>error</code></p>
+<h2 id="防盗链"><a href="#防盗链" class="headerlink" title="防盗链"></a>防盗链</h2><p>具体可以看这篇文章 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0a1338db6cab">什么是防盗链</a></p>
+<p>我简单说一下</p>
+<p>首先有一个问题，B站点作为一个商业网站，有很多自主版权的图片，自身展示用于商业目的。而A站点，希望在自己的网站上面也展示这些图片，直接使用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;img src=<span class="hljs-string">&quot;http://b.com/photo.jpg&quot;</span>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>这样，大量的客户端在访问A站点时，实际上消耗了B站点的流量，而A站点却从中达成商业目的。从而不劳而获。这样的A站点着实令B站点不快的。</p>
+<p>这种行为又叫做盗链（那我岂不也是盗链者了QAQ）</p>
+<p>如何解决这个问题呢？服务端利用了客户端的一个特性</p>
+<p>客户端在加载非本站的资源时，会在头字段加上<code>Referer:</code>字段，用来告诉服务端，这个请求是来自哪里。<br>回头看一眼我们的network<br><img src="https://img-blog.csdnimg.cn/20200328200214620.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>确实是这样。</p>
+<p>那我们可以推断，知乎服务器利用是否有referer字段来判断是否为盗链行为，如果是，那么返回403错误，与<code>x-tengine-error: denied by Referer ACL</code>字段。</p>
+<p>而我们用代理服务器转发静态资源请求，代理服务器不会无端加上referer字段，相当于变相绕过了知乎服务器的盗链限制。</p>
+<h2 id="出坑"><a href="#出坑" class="headerlink" title="出坑"></a>出坑</h2><p>验证一下，让代理服务器发送请求时带上<code>referer</code>字段，将request模块设置为调试模式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> imgServer = http.createServer(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> url = req.url.split(<span class="hljs-string">&#x27;/img/&#x27;</span>)[<span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">const</span> options = &#123;<br>        <span class="hljs-attr">url</span>: url,<br>        <span class="hljs-attr">encoding</span>: <span class="hljs-literal">null</span>,<br>        <span class="hljs-attr">headers</span>: &#123;<br>            <span class="hljs-string">&quot;Referer&quot;</span>: <span class="hljs-string">&quot;http://localhost:8080/&quot;</span>,<br>        &#125;<br>    &#125;;<br><br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback</span> (<span class="hljs-params">error, response, body</span>) </span>&#123;<br>        <span class="hljs-keyword">if</span>(error) <span class="hljs-built_in">console</span>.log(error);<br>        <span class="hljs-keyword">if</span> (!error &amp;&amp; response.statusCode === <span class="hljs-number">200</span>) &#123;<br>            <span class="hljs-keyword">const</span> contentType = response.headers[<span class="hljs-string">&#x27;content-type&#x27;</span>];<br>            res.setHeader(<span class="hljs-string">&#x27;Content-Type&#x27;</span>, contentType);<br>            <span class="hljs-comment">// res.setHeader(&#x27;Access-Control-Allow-Origin&#x27;, &#x27;*&#x27;);</span><br>            res.end(body);<br>        &#125;<br>    &#125;<br>    request.get(options, callback);<br>&#125;);<br></code></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/2020032820280853.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>看到控制台输出</p>
+<p><img src="https://img-blog.csdnimg.cn/20200328202537488.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pvaG5ueV9tdQ==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>踩坑结束。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/http/">http</a>
+                    
+                      <a class="hover-with-bg" href="/tags/NodeJs/">NodeJs</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/01/eventLoop%E7%90%86%E8%A7%A3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">EventLoop理解</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/22/vue%E5%AE%9E%E6%88%98-%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5/">
+                        <span class="hidden-mobile">Vue实战：知乎日报2.0</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

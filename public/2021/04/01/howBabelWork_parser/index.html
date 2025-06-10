@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="概述babel可以将ECMAScript2015+的语法，编译成ES5的语法，如： 1const square &#x3D; n &#x3D;&gt; n * n; 转换为 12345&quot;use strict&quot;;var square &#x3D; function square(n) &amp;#123;  return n * n;&amp;#125;; 可以在babel repl进行尝试。 babel是如何做到的呢 最自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Babel原理浅析(一)：解析">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2021/04/01/howBabelWork_parser/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="概述babel可以将ECMAScript2015+的语法，编译成ES5的语法，如： 1const square &#x3D; n &#x3D;&gt; n * n; 转换为 12345&quot;use strict&quot;;var square &#x3D; function square(n) &amp;#123;  return n * n;&amp;#125;; 可以在babel repl进行尝试。 babel是如何做到的呢 最自">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04039762baf24be6adbc2fc0c80da617~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bbe883ca20c47bfbe50c741f734d6a3~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69b9d88e7e824353980fb4455607812e~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-04-01T15:16:10.000Z">
+<meta property="article:modified_time" content="2025-06-10T04:39:28.845Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Babel">
+<meta property="article:tag" content="前端工程化">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image">
+  
+  <title>Babel原理浅析(一)：解析 - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Babel原理浅析(一)：解析">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-01 23:16" pubdate>
+        April 1, 2021 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Babel原理浅析(一)：解析</h1>
+            
+            <div class="markdown-body">
+              <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>babel可以将ECMAScript2015+的语法，编译成ES5的语法，如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> square = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n * n;<br></code></pre></td></tr></table></figure>
+<p>转换为</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-meta">&quot;use strict&quot;</span>;<br><br><span class="hljs-keyword">var</span> square = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">n</span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> n * n;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>可以在<a target="_blank" rel="noopener" href="https://babeljs.io/repl#?browsers=defaults%2C%20not%20ie%2011%2C%20not%20ie_mob%2011&build=&builtIns=false&corejs=3.6&spec=false&loose=false&code_lz=MYewdgzgLgBBCOBXAhgJwKYwLwzNgfLjAFS4DcAUEA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=true&fileSize=true&timeTravel=true&sourceType=module&lineWrap=true&presets=es2015%2Ces2016%2Ces2017&prettier=true&targets=&version=7.16.7&externalPlugins=&assumptions=%7B%7D">babel repl</a>进行尝试。</p>
+<p><strong>babel是如何做到的呢</strong></p>
+<p>最自然的想法是这样，js代码实际上就是一长串字符串，babel是将一个字符串替换为另一种字符串，那我们写一个字符串替换的程序对这个字符串进行替换似乎就可以做到。</p>
+<p>但如果你下手去写，就会发现无从下手。首先这个替换规则必然非常复杂，正则替换的方式，会让整个正则表达式异常复杂。其次ES6中有一些复杂的语法糖，比如<code>class</code>，如何去实现呢，单纯替换是不好去做的。</p>
+<p>我们可能要借助一些数据结构(AST)去实现这件事。</p>
+<p>babel用了三个运行阶段去做：<strong>解析(parse)<strong>、</strong>转换(transform)<strong>、</strong>生成(generate)</strong></p>
+<p>我们可以在babel源码中调试看一下，先将babel仓库clone到本地，在babel根目录<code>build</code>一下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">yarn install<br>npm run build<br></code></pre></td></tr></table></figure>
+<p>新建文件test.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> &#123; parse &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-parser&quot;</span>);<br><span class="hljs-keyword">const</span> traverse = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-traverse&quot;</span>).default;<br><span class="hljs-keyword">const</span> generate = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-generator&quot;</span>).default;<br><br><span class="hljs-keyword">const</span> code = <span class="hljs-string">&quot;const square = n =&gt; n * n&quot;</span>;<br><br><span class="hljs-comment">// parse the code -&gt; ast</span><br><span class="hljs-keyword">const</span> ast = parse(code);<br><br><span class="hljs-comment">// transform the ast</span><br>traverse(ast, &#123;<br>  <span class="hljs-function"><span class="hljs-title">enter</span>(<span class="hljs-params">path</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (path.node.type !== <span class="hljs-string">&quot;ArrowFunctionExpression&quot;</span>) <span class="hljs-keyword">return</span>;<br><br>    path.arrowFunctionToExpression(&#123;<br>      <span class="hljs-attr">allowInsertArrow</span>: <span class="hljs-literal">false</span>,<br>      <span class="hljs-attr">noNewArrows</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">specCompliant</span>: <span class="hljs-literal">false</span>,<br>    &#125;);<br>  &#125;,<br>&#125;);<br><br><span class="hljs-comment">// generate code &lt;- ast</span><br><span class="hljs-keyword">const</span> output = generate(ast, code);<br><span class="hljs-built_in">console</span>.log(output.code);<br><span class="hljs-comment">// const square = function (n) &#123;</span><br><span class="hljs-comment">//     return n * n;</span><br><span class="hljs-comment">//   &#125;;</span><br></code></pre></td></tr></table></figure>
+<p>运行一下这段代码，可以看到在控制台打印出了转换后的代码，<code>parse</code>、<code>traverse</code>、<code>generate</code>分别对应转换过程的三个阶段，下面我尝试讲解下这个三个具体过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">code -&gt; AST -&gt; transformed AST -&gt; transformed code<br></code></pre></td></tr></table></figure>
+
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>解析阶段分为两步，词法分析(lexical analysis)、语法分析(syntax analysis)，最终将一个js文件解析成为一棵抽象语法树(AST)。</p>
+<p>第一个术语出现了，什么是AST，如果你看过《VS CODE权威指南》，可能对这个词会有点印象，AST是一种n叉树表示的数据结构，包含分析源代码的所有必要信息（关键词，变量名，变量值等），是代码的一种抽象表示，方便开发者对代码进行转换操作，编译器可以将代码解析成AST，也可以根据AST重新生成代码，眼见为实，先来用babel的解析器生成一棵AST，这部分代码都在<a target="_blank" rel="noopener" href="https://github.com/babel/babel/tree/main/packages/babel-parser">babel/packages/babel-parser</a>中。</p>
+<p>我们在test.js中将ast打印出来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">console</span>.log(ast)<br></code></pre></td></tr></table></figure>
+<p>可以看到babel解析器输出了AST。它非常的长，我们只有一行函数声明，它对应的AST竟然有近200行。我们去掉一些代码位置信息，分析一下这个精简版AST。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;File&quot;</span>,<br>    <span class="hljs-attr">&quot;program&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Program&quot;</span>,<br>        <span class="hljs-attr">&quot;sourceType&quot;</span>: <span class="hljs-string">&quot;script&quot;</span>,<br>        <span class="hljs-attr">&quot;body&quot;</span>: [<br>            &#123;<br>                <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;VariableDeclaration&quot;</span>,<br>                <span class="hljs-attr">&quot;declarations&quot;</span>: [<br>                    &#123;<br>                        <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;VariableDeclarator&quot;</span>,<br>                        <span class="hljs-attr">&quot;id&quot;</span>: &#123;<br>                            <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>                            <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;square&quot;</span><br>                        &#125;,<br>                        <span class="hljs-attr">&quot;init&quot;</span>: &#123;<br>                            <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;ArrowFunctionExpression&quot;</span>,<br>                            <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-literal">null</span>,<br>                            <span class="hljs-attr">&quot;generator&quot;</span>: <span class="hljs-literal">false</span>,<br>                            <span class="hljs-attr">&quot;async&quot;</span>: <span class="hljs-literal">false</span>,<br>                            <span class="hljs-attr">&quot;params&quot;</span>: [<br>                                &#123;<br>                                    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>                                    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>                                &#125;<br>                            ],<br>                            <span class="hljs-attr">&quot;body&quot;</span>: &#123;<br>                                <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;BinaryExpression&quot;</span>,<br>                                <span class="hljs-attr">&quot;left&quot;</span>: &#123;<br>                                    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>                                    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>                                &#125;,<br>                                <span class="hljs-attr">&quot;operator&quot;</span>: <span class="hljs-string">&quot;*&quot;</span>,<br>                                <span class="hljs-attr">&quot;right&quot;</span>: &#123;<br>                                    <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>                                    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>                                &#125;<br>                            &#125;<br>                        &#125;<br>                    &#125;<br>                ],<br>                <span class="hljs-attr">&quot;kind&quot;</span>: <span class="hljs-string">&quot;const&quot;</span><br>            &#125;<br>        ]<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>每一个代码块都有一个type字段，标识这个代码块的类型，如<code>Program</code>程序、<code>VariableDeclaration</code>变量声明、<code>ArrowFunctionExpression</code>箭头函数、<code>BinaryExpression</code>二项式等，每个代码块的结构不是相同的，比如<code>BinaryExpression</code>的内容是<code>left</code>、<code>right</code>、<code>operator</code>，代表<code>n * n</code>，<code>ArrowFunctionExpression</code>的内容有<code>params</code>、<code>body</code>，代表<code>(...params) =&gt; body</code>。</p>
+<p>看到这，我们已经明白AST是个什么数据结构了</p>
+<ul>
+<li>n叉树。</li>
+<li>每个节点包含至少两种信息，<code>type</code>节点类型、描述该类型所需要的信息（在后面的AST-&gt;code阶段，这些信息足够我们去重新生成代码）。</li>
+</ul>
+<p>笔者最近的工作是开发一个低代码平台，看到这个结构是非常亲切呀，跟我们平台底层配置项的数据结构可太像了，不了解低代码平台的的可以看下<a target="_blank" rel="noopener" href="https://juejin.cn/post/6925306474524737543">这里</a>，另外，我有突然想到<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/Performance/How_browsers_work#building_the_dom_tree">浏览器解析过程</a>会将html文件、css文件解析为DOM树与CSSOM树，这两棵树也可能是AST。</p>
+<p>任何语言都可以被解析成AST，AST是各种语言解析编译运行过程中，都会有的中间产物，那么它是怎么生成的呢？<br><em>注：下面的过程为理论推演过程，跟babel的具体实现不完全相同</em></p>
+<p>两步：<strong>词法解析</strong>、<strong>语法解析</strong></p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="lexicalAnalysis"></p>
+<p>词法解析（lexical analysis），顾名思义，是对单词本义的解析，首先扫描器（scanner）会对代码进行扫描操作，把代码分割成一个个有意义的词（lexemes），如：单词，标点等。<code>const square = n =&gt; n * n;</code>会被分割成<code>[const, squara, =, n, =, &gt;, n, *, n]</code>。这个过程跟这段代码是用什么语言写的没有关系。随后标识器（tokenizer）会对lexemes进行释义，比如：<code>const</code>会被标识为关键字、<code>=, &gt;</code>两个符号会标识为箭头，这个过程就与使用的语言有关了，<code>const</code>在js中会被标识为关键字，但在其他语言中就不一定。最后输出(tokens)为</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs javascript">[<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Keyword&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;const&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;square&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Punctuator&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;=&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Punctuator&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;=&gt;&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Punctuator&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;*&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;n&quot;</span><br>    &#125;,<br>    &#123;<br>        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Punctuator&quot;</span>,<br>        <span class="hljs-string">&quot;value&quot;</span>: <span class="hljs-string">&quot;;&quot;</span><br>    &#125;<br>]<br></code></pre></td></tr></table></figure>
+<p>当我们有了tokens，就可以进行语法解析（syntax analysis）了，解析器（parser）会把tokens转换为一棵解析树（parse tree），也可以称之为具体语法树(CST, concrete syntax tree)<br><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04039762baf24be6adbc2fc0c80da617~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="syntaxTree"><br>如果仔细看这棵CST，可以看到很多无用信息，比如，有很多节点只有一个子节点，那这种节点完全可以压缩去掉，因为它没有给我们提供额外的有用信息。<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bbe883ca20c47bfbe50c741f734d6a3~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="cstAfterCompress"><br>压缩后继续来看这棵树，可以发现一些标点符号与操作符可以用n叉树本身的结构就可以代表，所以再来简化一下。<br><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69b9d88e7e824353980fb4455607812e~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="ast"><br>得到了最终我们想要的结构，一棵非常抽象（相较于CST）、简化的AST。</p>
+<p>可以在<a target="_blank" rel="noopener" href="https://esprima.org/demo/parse.html?code=const%20square%20=%20n%20=%3E%20n%20*%20n;%0A">这个网站</a>，输入随便一段代码，看看对应的tokens与AST。</p>
+<p>得到AST后，我们就可以对AST进行操作，将其转换成我们想要的代码所对应的结构，这部分就是转换, 点击前往⬇️</p>
+<p><a href="https://luoluoqinghuan.cn/2021/04/09/howTransformBabelAst/">Babel原理浅析(二): 手写一个极简插件</a></p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p><a target="_blank" rel="noopener" href="https://medium.com/basecs/leveling-up-ones-parsing-game-with-asts-d7a6fc2400ff">Leveling Up One’s Parsing Game With ASTs</a></p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@makk.bit/babel-under-the-hood-63e3fb961243">Babel under the hood</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/how-to-write-a-babel-plugin.html">Babel插件开发入门指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://lihautan.com/step-by-step-guide-for-writing-a-babel-transformation/">Step-by-step guide for writing a custom babel transformation</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md">Babel 用户手册</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Babel/">Babel</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/09/howTransformBabelAst/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Babel原理浅析(二)： 手写一个极简插件</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/19/vue%E5%AE%9E%E6%88%98-%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/">
+                        <span class="hidden-mobile">Vue实战：实现一个博客系统</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

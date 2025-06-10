@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="概述useSelector是react-redux@7中加入的hook，可以在不使用connect()的情况下将函数组件连接到redux，这样代码写起来会更加清晰，更加方便。 使用起来也很简单，我们写一个简单的加减数组件来看一下 12345678910111213141516171819202122232425262728&#x2F;&#x2F; index.tsximport React from &amp;#x27;re">
+<meta property="og:type" content="article">
+<meta property="og:title" content="useSelector是如何触发更新的以及手写一个简单的useSelector">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2022/02/15/useSelector%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91%E6%9B%B4%E6%96%B0%E7%9A%84%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84useSelector/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="概述useSelector是react-redux@7中加入的hook，可以在不使用connect()的情况下将函数组件连接到redux，这样代码写起来会更加清晰，更加方便。 使用起来也很简单，我们写一个简单的加减数组件来看一下 12345678910111213141516171819202122232425262728&#x2F;&#x2F; index.tsximport React from &amp;#x27;re">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-15T10:04:00.000Z">
+<meta property="article:modified_time" content="2025-06-10T04:39:28.845Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="redux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>useSelector是如何触发更新的以及手写一个简单的useSelector - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="useSelector是如何触发更新的以及手写一个简单的useSelector">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-15 18:04" pubdate>
+        February 15, 2022 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">useSelector是如何触发更新的以及手写一个简单的useSelector</h1>
+            
+            <div class="markdown-body">
+              <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><code>useSelector</code>是<code>react-redux@7</code>中加入的hook，可以在不使用<code>connect()</code>的情况下将函数组件连接到redux，这样代码写起来会更加清晰，更加方便。</p>
+<p>使用起来也很简单，我们写一个简单的加减数组件来看一下</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// index.tsx</span><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; createStore, Reducer &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; Provider &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-redux&#x27;</span>;<br><span class="hljs-keyword">import</span> Sub <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./sub&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> StoreState &#123;<br>  <span class="hljs-attr">count</span>: <span class="hljs-built_in">number</span><br>&#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> StoreAction &#123;<br>  <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;change&#x27;</span><br>  <span class="hljs-attr">payload</span>: StoreState<br>&#125;<br><br><span class="hljs-keyword">const</span> reducer: Reducer&lt;StoreState, StoreAction&gt; = <span class="hljs-function">(<span class="hljs-params">state, action</span>) =&gt;</span> (&#123; ...state, ...action.payload &#125;);<br><span class="hljs-keyword">const</span> store = createStore(reducer, &#123; <span class="hljs-attr">count</span>: <span class="hljs-number">0</span> &#125;);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> (<br>    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">&#123;store&#125;</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">Sub</span> /&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span></span><br>  );<br>&#125;<br><br>ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span></span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>));<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// Sub.tsx</span><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; StoreState, StoreAction &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./index&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; useDispatch, useSelector &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-redux&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Sub</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> count = useSelector&lt;StoreState, <span class="hljs-built_in">number</span>&gt;(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.count);<br>  <span class="hljs-keyword">const</span> dispatch = useDispatch&lt;StoreAction&gt;();<br>  <span class="hljs-keyword">const</span> customEqalityCount = useSelector&lt;StoreState, <span class="hljs-built_in">number</span>&gt;(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.count, <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a &gt; b);<br>  <br>  <span class="hljs-keyword">return</span> (<br>    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;count&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> dispatch(</span><br><span class="xml">        &#123;</span><br><span class="xml">          type: &#x27;change&#x27;,</span><br><span class="xml">          payload: &#123; count: count + 1 &#125;,</span><br><span class="xml">        &#125;,</span><br><span class="xml">      )&#125;&gt;</span><br><span class="xml">        点击增加</span><br><span class="xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> dispatch(</span><br><span class="xml">        &#123;</span><br><span class="xml">          type: &#x27;change&#x27;,</span><br><span class="xml">          payload: &#123; count: count - 1 &#125;,</span><br><span class="xml">        &#125;,</span><br><span class="xml">      )&#125;&gt;</span><br><span class="xml">        点击减少</span><br><span class="xml">      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;customEqalityCount&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在<code>index.tsx</code>中创建了一个<code>store</code>，丢到<code>Provider</code>中，在子组件中使用<code>useSelector</code>获取<code>store</code>中最新的state, <code>useDispatch</code>更新<code>store</code>中的state，这样一个简单的加减数功能就完成了，注意在<code>Sub</code>中第二个<code>useSelector</code>使用了两个参数，向它传递了一个新旧<code>count</code>比较函数，只有该函数返回<code>false</code>的时候才会触发更新。在这里我传了一个<code>(a, b) =&gt; a &gt; b</code>，意味着该值只能减少不能增加。</p>
+<p>可以在<a target="_blank" rel="noopener" href="https://codesandbox.io/s/sad-violet-65vrz?file=/src/App.tsx">sandbox</a>里玩下试试</p>
+<h2 id="原理浅析"><a href="#原理浅析" class="headerlink" title="原理浅析"></a>原理浅析</h2><p>其实原理也不复杂，使用了<code>useContext</code>的特性，但看过源码后，发现直接想的一些细节很妙。<br>我们可以先想一下，实现一个<code>useSelector</code>有哪些问题需要解决：</p>
+<ul>
+<li><code>useSelector</code>如何获取<code>store</code></li>
+<li>如何知道<code>store</code>中的<code>state</code>已经变了</li>
+<li>如何触发组件re-render</li>
+<li>如何记录变化前的<code>state</code></li>
+<li>如何返回用户希望拿到的<code>state</code></li>
+</ul>
+<p>第一个问题最简单，直接使用<code>useContext</code>就可以拿到。怎么知道<code>state</code>已经变了呢，这里我一开始有个误区，以为直接把<code>store</code>或者把<code>store.getState()</code>获取的<code>state</code>放到<code>useEffect</code>的依赖里就可以知道了。可问题是<code>store</code>会变吗，答案是不会，<code>store</code>是一个对象，只要<code>store</code>通过<code>createStore()</code>创建，这个对象的引用就不会变。<code>state</code>确实会变，但这个变化react可以知道吗，<code>state</code>只是一个值，是一个闭包，而不是react通过<code>useState</code>创建的，react是不知道他是否变化的，换句话说<code>state</code>改变时不会通知react。</p>
+<p>那么如何解决呢，答案就在谜面上，在<code>store.subscribe()</code>里订阅就可以了，我们可以在回调函数中比较变化前后的<code>state</code>，去触发更新。</p>
+<p>OK，如何触发组件re-render呢，这个也比较简单，用 <code>useState</code> 或 <code>useReducer</code> 记录一个无意义的状态，在需要重新渲染的时候，改变它就可以了。</p>
+<p>如何记录变化前后的<code>state</code>呢，可以用<code>useState</code> <code>useReducer</code>吗，当然不可以，我们记录之前的<code>state</code>是为了与现在的<code>state</code>进行比较，从而决定是否触发组件更新，使用这两个api可能引起额外的非必要更新，那能记录状态且不会触发re-render的api只有<code>useRef</code>了。</p>
+<p>如何返回用户想要的state呢，哈哈哈，自定义hook是个函数呀，直接返回就完事了。</p>
+<h2 id="手写一个简单的useSelector"><a href="#手写一个简单的useSelector" class="headerlink" title="手写一个简单的useSelector"></a>手写一个简单的useSelector</h2><p>原理差不多搞清楚了之后，我们就可以来试着模拟一个useSelector，实践一下。<em>注：以下实现简化了源码中的很多细节</em></p>
+<p>首先，我们需要有一个context</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// context.ts</span><br><span class="hljs-keyword">import</span> &#123; createContext &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; AnyAction, Store &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;redux&quot;</span>;<br><br><span class="hljs-keyword">const</span> StoreContext = createContext&lt;Store&lt;<span class="hljs-built_in">any</span>, AnyAction&gt;&gt;(<span class="hljs-literal">null</span> <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>);<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> StoreContext;<br></code></pre></td></tr></table></figure>
+
+<p>有了context就可以写provider跟useDispatch了</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// Provider.tsx</span><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; AnyAction, Store, Action &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span>;<br><span class="hljs-keyword">import</span> StoreContext <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./context&#x27;</span>;<br><br><span class="hljs-keyword">interface</span> ProviderParams&lt;T <span class="hljs-keyword">extends</span> Action = AnyAction, S = any&gt; &#123;<br>  <span class="hljs-attr">store</span>: Store&lt;S, T&gt;,<br>  children: JSX.Element<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Provider</span></span><br><span class="hljs-function">&lt;<span class="hljs-title">T</span> <span class="hljs-title">extends</span> <span class="hljs-title">Action</span> = <span class="hljs-title">AnyAction</span>&gt;(<span class="hljs-params">&#123; store, children &#125;: ProviderParams&lt;T&gt;</span>) </span>&#123;<br>  <span class="hljs-comment">// @ts-ignore</span><br>  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">StoreContext.Provider</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&#123;store&#125;</span>&gt;</span>&#123;children&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">StoreContext.Provider</span>&gt;</span></span>;<br>&#125;<br><br><span class="hljs-comment">// useDispatch.ts</span><br><span class="hljs-keyword">import</span> &#123; useContext &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; Action, Dispatch &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span>;<br><span class="hljs-keyword">import</span> StoreContext <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./context&#x27;</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useDispatch</span>&lt;<span class="hljs-title">T</span> <span class="hljs-title">extends</span> <span class="hljs-title">Action</span>&gt;(<span class="hljs-params"></span>): <span class="hljs-title">Dispatch</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br>  <span class="hljs-keyword">const</span> store = useContext(StoreContext);<br>  <span class="hljs-keyword">return</span> store.dispatch;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后就可以将最开始index.tsx的代码改一下，引用我们自己文件。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">// index.tsx</span><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; createStore, Reducer &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span>;<br><span class="hljs-keyword">import</span> Provider <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Provider&#x27;</span>;<br><span class="hljs-keyword">import</span> Sub <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./sub&#x27;</span>;<br><span class="hljs-comment">// ...</span><br></code></pre></td></tr></table></figure>
+<p>我们在这里创建store，通过context传下去。<br>接下来就可写useSelector了</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> &#123;<br>  useContext, useEffect, useReducer, useRef,<br>&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> StoreContext <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./context&#x27;</span>;<br><br><span class="hljs-keyword">type</span> EqualityFn&lt;T&gt; = <span class="hljs-function">(<span class="hljs-params">a: T, b: T</span>) =&gt;</span> <span class="hljs-built_in">boolean</span>;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useSelector</span>&lt;<span class="hljs-title">T</span>, <span class="hljs-title">Selected</span> <span class="hljs-title">extends</span> <span class="hljs-title">unknown</span>&gt;(<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-function">  selector: (state: T) =&gt; Selected,</span></span><br><span class="hljs-params"><span class="hljs-function">  equalityFn?: EqualityFn&lt;Selected&gt;,</span></span><br><span class="hljs-params"><span class="hljs-function"></span>): <span class="hljs-title">Selected</span> </span>&#123;<br>  <span class="hljs-keyword">const</span> store = useContext(StoreContext);<br>  <span class="hljs-keyword">const</span> [, forceRender] = useReducer(<span class="hljs-function">(<span class="hljs-params">s</span>) =&gt;</span> s + <span class="hljs-number">1</span>, <span class="hljs-number">0</span>);<br><br>  <span class="hljs-keyword">const</span> latestStoreState = useRef&lt;T&gt;(store.getState());<br>  <span class="hljs-keyword">const</span> latestSelectedState = useRef&lt;Selected&gt;(selector(latestStoreState.current));<br><br>  useEffect(<span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkUpdate</span>(<span class="hljs-params"></span>) </span>&#123;<br>      <span class="hljs-keyword">const</span> newState = store.getState();<br>      <span class="hljs-keyword">if</span> (newState === latestStoreState) <span class="hljs-keyword">return</span>;<br><br>      <span class="hljs-keyword">const</span> newSelectedState = selector(newState);<br>      <span class="hljs-keyword">if</span> (!equalityFn) equalityFn = <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a === b;<br><br>      <span class="hljs-keyword">if</span> (!equalityFn(newSelectedState, latestSelectedState.current)) &#123;<br>        latestSelectedState.current = newSelectedState;<br>        latestStoreState.current = newState;<br>        forceRender();<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">const</span> unsubscribe = store.subscribe(checkUpdate);<br>    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> unsubscribe();<br>  &#125;, [store]);<br><br>  <span class="hljs-keyword">return</span> latestSelectedState.current;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>最后改下sub.tsx中的代码，引用我们自己的文件</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; StoreState, StoreAction &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./index&#x27;</span>;<br><span class="hljs-keyword">import</span> useDispatch <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./useDispatch&#x27;</span>;<br><span class="hljs-keyword">import</span> useSelector <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./useSelector&#x27;</span>;<br><span class="hljs-comment">//...</span><br></code></pre></td></tr></table></figure>
+<p>可以在<a target="_blank" rel="noopener" href="https://codesandbox.io/s/blissful-fire-g00xj?file=/src/index.tsx:0-606">sandbox</a>中试一下，效果跟之前是一样的</p>
+<h2 id="尾巴"><a href="#尾巴" class="headerlink" title="尾巴"></a>尾巴</h2><p>上面的原理是借鉴了<code>react-redux@7</code>中的实现，使用一个forceUpdate去触发re-render，但在<code>@8-beta</code>中，useSelector直接使用了React18提供的<code>useSyncExternalStore</code>api去做这件事，关于这个api可以在<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/502917860">这里</a>了解一下。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://medium.com/async/how-useselector-can-trigger-an-update-only-when-we-want-it-to-a8d92306f559">How useSelector can trigger an update only when we want it to</a></p>
+<p><a target="_blank" rel="noopener" href="https://react-redux.js.org/api/hooks">React Redux Doc: Hooks</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/reduxjs/react-redux">react-redux</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/reduxjs/redux">redux</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/redux/">redux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                        <span class="hidden-mobile">Hexo博客使用Github_Webhook自动部署到个人服务器</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

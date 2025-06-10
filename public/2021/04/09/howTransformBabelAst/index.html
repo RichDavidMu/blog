@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="我们在上文中已经了解到babel的第一步，将代码解析成AST，接下来的两步就比较好理解了，转换与生成。我再看最开始的代码。 123456789101112131415161718192021222324252627282930const &amp;#123; parse &amp;#125; &#x3D; require(&quot;.&#x2F;packages&#x2F;babel-parser&quot;);const traverse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Babel原理浅析(二)： 手写一个极简插件">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2021/04/09/howTransformBabelAst/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="我们在上文中已经了解到babel的第一步，将代码解析成AST，接下来的两步就比较好理解了，转换与生成。我再看最开始的代码。 123456789101112131415161718192021222324252627282930const &amp;#123; parse &amp;#125; &#x3D; require(&quot;.&#x2F;packages&#x2F;babel-parser&quot;);const traverse">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408772caac94408eb086119c22020f6c~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2021-04-09T15:16:10.000Z">
+<meta property="article:modified_time" content="2025-06-10T04:39:28.845Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Babel">
+<meta property="article:tag" content="前端工程化">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408772caac94408eb086119c22020f6c~tplv-k3u1fbpfcp-watermark.image">
+  
+  <title>Babel原理浅析(二)： 手写一个极简插件 - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Babel原理浅析(二)： 手写一个极简插件">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-09 23:16" pubdate>
+        April 9, 2021 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Babel原理浅析(二)： 手写一个极简插件</h1>
+            
+            <div class="markdown-body">
+              <p>我们在<a href="https://luoluoqinghuan.cn/2021/04/01/howBabelWork_parser/">上文</a>中已经了解到babel的第一步，将代码解析成AST，接下来的两步就比较好理解了，转换与生成。我再看最开始的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> &#123; parse &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-parser&quot;</span>);<br><span class="hljs-keyword">const</span> traverse = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-traverse&quot;</span>).default;<br><span class="hljs-keyword">const</span> generate = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./packages/babel-generator&quot;</span>).default;<br><br><span class="hljs-keyword">const</span> code = <span class="hljs-string">&quot;const square = n =&gt; n * n&quot;</span>;<br><br><span class="hljs-comment">// parse the code -&gt; ast</span><br><span class="hljs-keyword">const</span> ast = parse(code);<br><br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">`originAST: <span class="hljs-subst">$&#123;<span class="hljs-built_in">JSON</span>.stringify(ast)&#125;</span>`</span>);<br><span class="hljs-comment">// transform the ast</span><br>traverse(ast, &#123;<br>  <span class="hljs-function"><span class="hljs-title">enter</span>(<span class="hljs-params">path</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (path.node.type !== <span class="hljs-string">&quot;ArrowFunctionExpression&quot;</span>) <span class="hljs-keyword">return</span>;<br><br>    path.arrowFunctionToExpression(&#123;<br>      <span class="hljs-attr">allowInsertArrow</span>: <span class="hljs-literal">false</span>,<br>      <span class="hljs-attr">noNewArrows</span>: <span class="hljs-literal">true</span>,<br>      <span class="hljs-attr">specCompliant</span>: <span class="hljs-literal">false</span>,<br>    &#125;);<br>  &#125;,<br>&#125;);<br><br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">`newAST: <span class="hljs-subst">$&#123;<span class="hljs-built_in">JSON</span>.stringify(ast)&#125;</span>`</span>)<br><span class="hljs-comment">// generate code &lt;- ast</span><br><span class="hljs-keyword">const</span> output = generate(ast, code);<br><span class="hljs-built_in">console</span>.log(output.code);<br><span class="hljs-comment">// const square = function (n) &#123;</span><br><span class="hljs-comment">//     return n * n;</span><br><span class="hljs-comment">//   &#125;;</span><br></code></pre></td></tr></table></figure>
+
+<p>转换这里的代码其实是<code>babel-plugin-transform-arrow-functions</code>的源码，作用是将箭头函数转换成普通函数，我们分别将转换前后的AST打印出来，比较看一下这个插件对AST做了什么。<br><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408772caac94408eb086119c22020f6c~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="astCompared"></p>
+<p>转后的AST结构发生了变化，这就是转换阶段babel的作用，将源代码的AST按照<a target="_blank" rel="noopener" href="https://github.com/estree/estree">标准规范</a>转换成目标代码的AST。看到这儿，我们其实已经可以手写一个简单的插件来玩玩了。</p>
+<p>我们新建一个文件<code>replaceN2M.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-comment">// visitor 遍历回调</span><br>    <span class="hljs-attr">visitor</span>: &#123;<br>      <span class="hljs-comment">// type === &#x27;Identifier&#x27; step into</span><br>      <span class="hljs-function"><span class="hljs-title">Identifier</span>(<span class="hljs-params">path</span>)</span> &#123;<br>        <span class="hljs-comment">// n -&gt; m</span><br>        <span class="hljs-keyword">if</span> (path.isIdentifier(&#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;n&quot;</span> &#125;)) &#123;<br>          path.node.name = <span class="hljs-string">&quot;m&quot;</span>;<br>        &#125;<br>      &#125;,<br>      <span class="hljs-comment">// type === &#x27;BinaryExpression&#x27; step into</span><br>      <span class="hljs-function"><span class="hljs-title">BinaryExpression</span>(<span class="hljs-params">path</span>)</span> &#123;<br>        <span class="hljs-comment">// * -&gt; -</span><br>        <span class="hljs-keyword">if</span> (path.node.operator === <span class="hljs-string">&quot;*&quot;</span>) &#123;<br>          path.node.operator = <span class="hljs-string">&quot;-&quot;</span>;<br>        &#125;<br>      &#125;,<br>    &#125;,<br>  &#125;;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>一个最简单的插件就完成了，它做了两件事，将所有变量<code>n</code>转换成<code>m</code>，将所有二元表达式的运算符<code>*</code>转换成<code>-</code>。<br>babel会深度优先遍历AST，期间会调用插件中的<code>visitor.method</code>，visitor里存放对AST的操作回调，<code>Identifier()&#123;&#125;</code>是指当前AST节点的<code>type === &#39;Identifier&#39;</code>时，进入此函数，此时<code>path</code>为当前位置，<code>path.node</code>为此节点，那么我们就可以对node进行操作。</p>
+<p>我们新建一个文件<code>test2.js</code>，看下我们的插件是否起作用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> square = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n * n<br></code></pre></td></tr></table></figure>
+
+<p>自定义的方法有两种方法进行调用，一种是直接使用babel编译命令，<code>npx babel --plugins ./replaceN2M.js test2.js</code>。第二种是，将我们的插件放进babel的配置文件里，在<code>babel.config.js</code>的plugin中添加<code>&quot;./replaceN2M&quot;</code>，现在整个plugin长这样。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript">plugins: [<br>      [<span class="hljs-string">&quot;@babel/proposal-object-rest-spread&quot;</span>, &#123; <span class="hljs-attr">useBuiltIns</span>: <span class="hljs-literal">true</span> &#125;],<br><br>      convertESM ? <span class="hljs-string">&quot;@babel/proposal-export-namespace-from&quot;</span> : <span class="hljs-literal">null</span>,<br>      convertESM ? pluginImportMetaUrl : <span class="hljs-literal">null</span>,<br><br>      pluginPackageJsonMacro,<br><br>      process.env.STRIP_BABEL_8_FLAG &amp;&amp; [<br>        pluginToggleBabel8Breaking,<br>        &#123; <span class="hljs-attr">breaking</span>: bool(process.env.BABEL_8_BREAKING) &#125;,<br>      ],<br>      needsPolyfillsForOldNode &amp;&amp; pluginPolyfillsOldNode,<br>      <span class="hljs-string">&quot;./replaceN2M&quot;</span>,<br>    ].filter(<span class="hljs-built_in">Boolean</span>)<br></code></pre></td></tr></table></figure>
+<p>然后直接运行 <code>npx babel test2.js</code>即可，我们可以看到控制台输出了我们想要的结果，或者，让babel直接编译成文件<code>npx babel test2.js --out-dir ./ </code>，再打开<code>test2.js</code>看到文件内容已经是编译后的内容。</p>
+<p>写一个插件最大的难点在于对babelAPI的不熟悉以及对ECMA规范的不了解，如果要写一个复杂的插件，需要多看看类似插件的实现，强烈推荐<a target="_blank" rel="noopener" href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md#paths">babel插件开发手册</a>，基本涵盖了开发插件所需要的所有知识。</p>
+<p>到这里，我的好奇心基本都已经打消了，转换后的AST怎么重新生成代码，这里就不深入研究了，感兴趣可以直接去看源码。</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chyingp/p/how-to-write-a-babel-plugin.html">Babel插件开发入门指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://lihautan.com/step-by-step-guide-for-writing-a-babel-transformation/">Step-by-step guide for writing a custom babel transformation</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md">Babel 插件开发手册</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Babel/">Babel</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hexo博客使用Github_Webhook自动部署到个人服务器</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/01/howBabelWork_parser/">
+                        <span class="hidden-mobile">Babel原理浅析(一)：解析</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

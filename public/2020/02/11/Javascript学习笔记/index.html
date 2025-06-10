@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="打算把最近学习的JavaScript写个博客整理记录一下，学习方式是《JavaScript语言精粹》这本书和廖雪峰的博客，不太明白的地方会去看《JavaScript权威指南》、JavaScript|MDN和W3School。 数据类型JavaScript 变量能够保存多种数据类型：数值、字符串值、数组、对象等等： NumbersJavaScript只有一种数字类型，不区分整型与浮点型，存储方式使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript学习笔记一">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2020/02/11/Javascript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="打算把最近学习的JavaScript写个博客整理记录一下，学习方式是《JavaScript语言精粹》这本书和廖雪峰的博客，不太明白的地方会去看《JavaScript权威指南》、JavaScript|MDN和W3School。 数据类型JavaScript 变量能够保存多种数据类型：数值、字符串值、数组、对象等等： NumbersJavaScript只有一种数字类型，不区分整型与浮点型，存储方式使用">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-11T08:26:09.000Z">
+<meta property="article:modified_time" content="2022-01-10T08:41:39.736Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>Javascript学习笔记一 - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Javascript学习笔记一">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-02-11 16:26" pubdate>
+        February 11, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Javascript学习笔记一</h1>
+            
+            <div class="markdown-body">
+              <p>打算把最近学习的JavaScript写个博客整理记录一下，学习方式是《JavaScript语言精粹》这本书和<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1022910821149312">廖雪峰的博客</a>，不太明白的地方会去看《JavaScript权威指南》、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">JavaScript|MDN</a>和<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/index.asp">W3School</a>。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>JavaScript 变量能够保存多种数据类型：数值、字符串值、数组、对象等等：</p>
+<h3 id="Numbers"><a href="#Numbers" class="headerlink" title="Numbers"></a>Numbers</h3><p>JavaScript只有一种数字类型，不区分整型与浮点型，存储方式使用64位浮点数，1和1.0的值是相同的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-number">123</span>; <span class="hljs-comment">// 整数123</span><br><span class="hljs-number">0.456</span>; <span class="hljs-comment">// 浮点数0.456</span><br><span class="hljs-number">1.2345e3</span>; <span class="hljs-comment">// 科学计数法表示1.2345x1000，等同于1234.5</span><br>-<span class="hljs-number">99</span>; <span class="hljs-comment">// 负数</span><br><span class="hljs-literal">NaN</span>; <span class="hljs-comment">// NaN表示Not a Number，当无法计算结果时用NaN表示，可以用isNaN检测NaN</span><br><span class="hljs-literal">Infinity</span>; <span class="hljs-comment">// Infinity表示无限大，当数值超过了JavaScript的Number所能表示的最大值时，就表示为Infinity</span><br></code></pre></td></tr></table></figure>
+<p>可以操作数字的方法 </p>
+<ul>
+<li>五个number方法 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_number_methods.asp">查看</a><ul>
+<li>将数字以字符串返回：<code>number.toString(radix)</code>,<code>radix</code>控制进制，默认十进制。</li>
+<li>将number转换为一个十进制形式的字符串，保留<code>fractionDigits</code>位小数（多余的四舍五入）：<code>number.toFixed(fractionDigits)</code></li>
+<li>将number转换成为一个指数形式的字符串，保留<code>fractionDigits</code>位小数（多余的四舍五入）<code>number.toExponential（fractionDigits）</code></li>
+<li>将number转换为一个十进制形式的字符串，保留<code>precision</code>个有效数字（多余的四舍五入）：<code>number.toPrecision(precision)</code></li>
+</ul>
+</li>
+<li>三个全局方法 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_number_methods.asp">查看</a><ul>
+<li>可以将x转换为数字，x为任意JavaScript变量（日期，布尔值等）：<code>Number(x)</code></li>
+<li>解析一段字符串并返回整型数值（向下取整）。允许空格。只返回首个数字： <code>parseInt(string)</code></li>
+<li>解析一段字符串并返回数值。允许空格。只返回首个数字：<code>parseFloat(string)</code></li>
+</ul>
+</li>
+<li>math对象方法执行数学数学任务 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_math.asp">查看</a><ul>
+<li>返回x的四舍五入：<code>Math.round(x)</code></li>
+<li>返回x的y次幂：<code>Math.pow(x,y)</code></li>
+<li>返回x的平方根：<code>Math.sqrt(x)</code></li>
+<li>返回x的绝对值：<code>Math.abs(x)</code></li>
+<li>x向上取整：<code>Math.ceil(x)</code>，x向下取整：<code>Math.floor(x)</code></li>
+<li>x正弦余弦：<code>Math.sin(x)</code> , <code>Math.cos(x)</code></li>
+<li>最大最小值：<code>Math.min(1,,2,3,4) //1</code> ，<code>Math.max(1,2,3,4) //4</code>,<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lguow/p/9725258.html">用于数组</a></li>
+<li>返回一个0-1的随机数：<code>Math.random()</code>，更多<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_random.asp">随机数trick</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="Strings"><a href="#Strings" class="headerlink" title="Strings"></a>Strings</h3><p>JavaScript的字符串就是用<code>&#39; &#39;</code>或<code>&quot; &quot;</code>括起来的字符<br>例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-string">&#x27;I\&#x27;m \&quot;OK\&quot;!&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>含义<code>I&#39;m &quot;OK&quot;!</code></p>
+<blockquote>
+<p>字符串一旦创建就不能改变，可以使用字符串方法操作返回新的字符串</p>
+</blockquote>
+<p><code>\</code>是转义字符 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-string">&#x27;A&#x27;</span> === <span class="hljs-string">&#x27;\u0041&#x27;</span>; <span class="hljs-comment">//true</span><br></code></pre></td></tr></table></figure>
+<p>string有<code>length</code>属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-string">&#x27;seven&#x27;</span>.length; <span class="hljs-comment">//5</span><br></code></pre></td></tr></table></figure>
+<p>可以用<code>+</code>号连接其他字符串来创建一个新的字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-string">&#x27;c&#x27;</span>+<span class="hljs-string">&#x27;a&#x27;</span>+<span class="hljs-string">&#x27;t&#x27;</span> ===<span class="hljs-string">&#x27;cat&#x27;</span>; <span class="hljs-comment">//true</span><br></code></pre></td></tr></table></figure>
+<p>string拥有方法 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_string_methods.asp">查看</a></p>
+<ul>
+<li><p>查找：<code>string.indexOf(searchString,position)</code> , <code>string.lastIndexOf(seachString,position)</code> , <code>string.search(regexp)</code>.<br><code>searchString</code>要搜索的字符串，<code>position</code>开始搜索的位置，<code>regexp</code>正则表达式对象，以number返回位置</p>
+<blockquote>
+<p> 两种方法，<code>string.indexOf()</code> 与 <code>string.search()</code>，是相等的。</p>
+<p>这两种方法是不相等的。区别在于：</p>
+<p><code>string.search()</code> 方法无法设置第二个开始位置参数。 <code>string.indexOf()</code> 方法无法设置更强大的搜索值（正则表达式）。</p>
+</blockquote>
+</li>
+<li><p>提取字符：<code>string.charAt(position)</code> 方法返回字符串中指定下标（位置）的字符串。<br><code>string.charCodeAt(position)</code>方法返回字符串中指定索引的字符 unicode 编码，常用此方法建造哈希表，相反<code>string.fromCharCode(charCode...)</code>根据编码返回字符串</p>
+<blockquote>
+<p>ECMAScript 5 (2009) 允许对字符串的属性访问 <code>[ ]</code>，如<code>str[0]</code><br>用属性访问有点不太靠谱：</p>
+<p>不适用 Internet Explorer 7 或更早的版本 它让字符串看起来像是数组（其实并不    是） 如果找不到字符，<code>[ ]</code> 返回 <code>undefined</code>，而 <code>charAt()</code> 返回空字符串。<br>它是只读的。<code>str[0] = &quot;A&quot;</code> 不会产生错误（但也不会工作！）<br>如果您希望按照数组的方式处理字符串，可以先把它转换为数组。</p>
+</blockquote>
+</li>
+<li><p>把字符串转换为数组：<code>string.split(separator,limit)</code><br>以<code>separator</code>分割，改参数可以是字符串或正则表达式，<code>limit</code>限制被分割的片段数量，返回元素为字符串的数组。</p>
+</li>
+<li><p>提取字符串：<code>string.slice(start, end)</code>，<code>string.substring(start, end)</code>，<code>string.substr(start, length)</code><br><code>start</code><strong>开始</strong>提取位置，<code>end</code><strong>最后</strong>一个字符的位置，如果为负数则与<code>string.length</code>相加，即倒数位置，<code>length</code>要提取的字符串<strong>长度</strong>。<br>不改变原字符串，将提取结果以新字符串返回。</p>
+<blockquote>
+<p><code>substring()</code> 类似于 <code>slice()</code>。不同之处在于 <code>substring()</code> 无法接受负的索引。<br><code>substr()</code> 类似于 <code>slice()</code>。不同之处在于第二个参数规定被提取部分的长度。</p>
+</blockquote>
+</li>
+<li><p>替换：<code>replace(seachValue,replaceValue)</code><br><code>seachValue</code>可以是<strong>字符串</strong>或<strong>正则表达式</strong>，<code>replaceValue</code>可以是<strong>字符串</strong>或一个<strong>函数</strong>。<br>当<code>replaceValue</code>是一个<strong>字符串</strong>，字符<code>$</code>拥有特别含义：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> oldareacode = <span class="hljs-regexp">/\((\d&#123;3&#125;)\)/g</span>;<br><span class="hljs-keyword">var</span> p = <span class="hljs-string">&#x27;(555)666-1212&#x27;</span>.replace(oldareacode,<span class="hljs-string">&#x27;$1-&#x27;</span>);<br><span class="hljs-comment">//p 是 &#x27;555-666-1212&#x27;</span><br></code></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>美元符号序列</th>
+<th>替换对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$<code>$$</code></td>
+<td>$</td>
+</tr>
+<tr>
+<td>$<code>$&amp;</code></td>
+<td>整个匹配文本</td>
+</tr>
+<tr>
+<td>$<code>$number</code></td>
+<td>分组捕获的文本</td>
+</tr>
+<tr>
+<td>$<code>$` </code></td>
+<td>匹配之前的文本</td>
+</tr>
+<tr>
+<td>$<code>$&#39;</code></td>
+<td>匹配之后的文本</td>
+</tr>
+</tbody></table>
+<p>  如果<code>replaceValue</code>是一个<strong>函数</strong>，那么每次遇到一次匹配函数就会调用一次，该函数返回的字符串用作替换文本，在下一个参数是分组2捕获的文本、</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> old = <span class="hljs-string">&#x27;hello World&#x27;</span>;<br><span class="hljs-keyword">var</span> p = old.replace(<span class="hljs-string">&#x27;hello&#x27;</span>,<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>)</span>&#123;<br>   	<span class="hljs-built_in">console</span>.log(c);<span class="hljs-comment">//hello</span><br>   	<span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Hello&#x27;</span>    <br>	&#125;)<br><span class="hljs-built_in">console</span>.log(p);<span class="hljs-comment">//Hello World</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>replace()</code> 只替换首个匹配<br>默认地，<code>replace()</code> 对大小写敏感。<br>如需执行大小写不敏感的替换，请使用正则表达式 <code>/i</code>,请注意正则表达式不带引号。如：<code>replace(/he/i,&#39;she&#39;)</code><br>如需替换所有匹配，请使用正则表达式的 <code>/g</code> 标志（用于全局搜索)。如：<code>replace(/he/g,&#39;she&#39;)</code></p>
+</blockquote>
+</li>
+<li><p>转换大小写：<code>toUpperCase()</code>,<code>toLowerCase()</code></p>
+</li>
+<li><p>连接字符串：<code>concat()</code>与<code>+</code>等效</p>
+</li>
+<li><p>删除字符串两端的空白符：<code>String.trim()</code></p>
+<blockquote>
+<p>Internet Explorer 8 或更低版本不支持 <code>trim()</code> 方法。<br>如需支持 IE 8，您可搭配正则表达式使用 <code>replace()</code> 方法代替：<br><code>str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, &#39;&#39;)</code>; </p>
+</blockquote>
+</li>
+<li><p>匹配：<code>string.match(regexp)</code>方法让字符串与一个正则表达式匹配。根据g表示来决定如何匹配，如果没有<code>g</code>表示，那么结果与<code>regexp.exec(string)</code>的结果相同。否则会生成包含所有匹配的数组。</p>
+</li>
+</ul>
+<h4 id="多行字符串和模板字符串"><a href="#多行字符串和模板字符串" class="headerlink" title="多行字符串和模板字符串"></a>多行字符串和模板字符串</h4><p>ES6语法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-string">`这是一个</span><br><span class="hljs-string">多行</span><br><span class="hljs-string">字符串`</span>;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> name = <span class="hljs-string">&#x27;小明&#x27;</span>;<br><span class="hljs-keyword">var</span> age = <span class="hljs-number">20</span>;<br><span class="hljs-keyword">var</span> message = <span class="hljs-string">`你好, <span class="hljs-subst">$&#123;name&#125;</span>, 你今年<span class="hljs-subst">$&#123;age&#125;</span>岁了!`</span>;<br>message === <span class="hljs-string">&#x27;你好,小明,你今年20岁了&#x27;</span>; <span class="hljs-comment">//true</span><br></code></pre></td></tr></table></figure>
+<h3 id="boolean"><a href="#boolean" class="headerlink" title="boolean"></a>boolean</h3><p>布尔值只有<code>true</code>和<code>false</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-literal">true</span>; <span class="hljs-comment">// 这是一个true值</span><br><span class="hljs-literal">false</span>; <span class="hljs-comment">// 这是一个false值</span><br><span class="hljs-number">2</span> &gt; <span class="hljs-number">1</span>; <span class="hljs-comment">// 这是一个true值</span><br><span class="hljs-number">2</span> &gt;= <span class="hljs-number">3</span>; <span class="hljs-comment">// 这是一个false值</span><br></code></pre></td></tr></table></figure>
+<p>几个tips</p>
+<ul>
+<li><code>NaN</code>这个特殊的Number与所有其他值都不相等，包括它自己<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-literal">NaN</span> === <span class="hljs-literal">NaN</span>; <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure></li>
+<li>唯一能判断<code>NaN</code>的方法是通过<code>isNaN()</code>函数：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">isNaN</span>(<span class="hljs-literal">NaN</span>); <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>最后要注意浮点数的相等比较：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-number">1</span> / <span class="hljs-number">3</span> === (<span class="hljs-number">1</span> - <span class="hljs-number">2</span> / <span class="hljs-number">3</span>); <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这不是JavaScript的设计缺陷。浮点数在运算过程中会产生误差，因为计算机无法精确表示无限循环小数。要比较两个浮点数是否相等，只能计算它们之差的绝对值，看是否小于某个阈值：</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">Math</span>.abs(<span class="hljs-number">1</span> / <span class="hljs-number">3</span> - (<span class="hljs-number">1</span> - <span class="hljs-number">2</span> / <span class="hljs-number">3</span>)) &lt; <span class="hljs-number">0.0000001</span>; <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+<h3 id="null和undefined"><a href="#null和undefined" class="headerlink" title="null和undefined"></a>null和undefined</h3><p><code>null</code>表示一个“空”的值<br><code>undefined</code>表示值未定义</p>
+<blockquote>
+<p>JavaScript的设计者希望用null表示一个空的值，而undefined表示值未定义。事实证明，这并没有什么卵用，区分两者的意义不大。大多数情况下，我们都应该用null。undefined仅仅在判断函数参数是否传递的情况下有用。</p>
+</blockquote>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组是一组按顺序排列的集合，集合的每个值称为元素。JavaScript的数组可以包括任意数据类型。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> misc = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3.14</span>, <span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>，[<span class="hljs-string">&#x27;&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>],&#123;<span class="hljs-string">&#x27;&#x27;</span>:<span class="hljs-string">&#x27;&#x27;</span>&#125;];<br>misc.length  <span class="hljs-comment">//8</span><br>misc[<span class="hljs-number">0</span>] <span class="hljs-comment">//1</span><br>misc[<span class="hljs-number">8</span>] <span class="hljs-comment">//undefined</span><br></code></pre></td></tr></table></figure>
+<p>与大多数其他语言不同，JavaScript的数组没有上界</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myArray = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];<br>myArray.length; <span class="hljs-comment">// 5</span><br>myArray[<span class="hljs-number">10000</span>] = <span class="hljs-literal">true</span>;<br>myArray.length; <span class="hljs-comment">//10001</span><br>myArray.length = <span class="hljs-number">3</span>;<span class="hljs-comment">//myArray是[&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;]</span><br></code></pre></td></tr></table></figure>
+<p>数组专题<br>数组拥有方法 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_array_methods.asp">查看</a><br>数组的排序 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_array_sort.asp">查看</a><br> 数组的遍历 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/js/js_array_iteration.asp">查看</a></p>
+<h3 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h3><p>JavaScript的对象是一组由键-值组成的无序集合，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> person = &#123;<br>    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Bob&#x27;</span>,<br>    <span class="hljs-attr">age</span>: <span class="hljs-number">20</span>,<br>    <span class="hljs-attr">tags</span>: [<span class="hljs-string">&#x27;js&#x27;</span>, <span class="hljs-string">&#x27;web&#x27;</span>, <span class="hljs-string">&#x27;mobile&#x27;</span>],<br>    <span class="hljs-attr">city</span>: <span class="hljs-string">&#x27;Beijing&#x27;</span>,<br>    <span class="hljs-attr">hasCar</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">zipcode</span>: <span class="hljs-literal">null</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/12/Javascript%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%BA%8C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Javascript学习笔记二</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

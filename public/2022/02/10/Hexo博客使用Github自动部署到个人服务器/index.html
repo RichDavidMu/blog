@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="DavidMu">
+  <meta name="keywords" content="">
+  <meta name="description" content="最近想把之前写的博客重新注册一个域名放到网上，地址：https:&#x2F;&#x2F;luoluoqinghuan.cn&#x2F;。博客框架使用的是hexo，部署到服务器上也很简单，把hexo生成的网站文件放在服务器上，用koa-static起一个服务就行了。 但这是一种非常麻烦的部署方式，每次更新博客都要登陆服务器手动上传，如果想要自动更新网站就要解决两个问题：  从哪里拿到最新的代码（github） 如何知道代码已经更">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo博客使用Github_Webhook自动部署到个人服务器">
+<meta property="og:url" content="https://luoluoqinghuan.cn/2022/02/10/Hexo%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8Github%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E4%B8%AA%E4%BA%BA%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="David&#39;s Blog">
+<meta property="og:description" content="最近想把之前写的博客重新注册一个域名放到网上，地址：https:&#x2F;&#x2F;luoluoqinghuan.cn&#x2F;。博客框架使用的是hexo，部署到服务器上也很简单，把hexo生成的网站文件放在服务器上，用koa-static起一个服务就行了。 但这是一种非常麻烦的部署方式，每次更新博客都要登陆服务器手动上传，如果想要自动更新网站就要解决两个问题：  从哪里拿到最新的代码（github） 如何知道代码已经更">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/882c8bc589534941bd19cc2ffc53053a~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51073488f70a43998748ab2094c5ec0c~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9aacf4c41b6c42458e25936ee383797a~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-02-10T03:16:21.000Z">
+<meta property="article:modified_time" content="2025-06-10T04:39:28.844Z">
+<meta property="article:author" content="DavidMu">
+<meta property="article:tag" content="前端工程化">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/882c8bc589534941bd19cc2ffc53053a~tplv-k3u1fbpfcp-watermark.image">
+  
+  <title>Hexo博客使用Github_Webhook自动部署到个人服务器 - David&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"luoluoqinghuan.cn","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"hmpXIsh6aU6fLDMYiwwODOWG-gzGzoHsz","app_key":"pGjArBCw9n6uX36vlmBFqE4q","server_url":"https://hmpxish6.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>David&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/bg/nav1.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Hexo博客使用Github_Webhook自动部署到个人服务器">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-10 11:16" pubdate>
+        February 10, 2022 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Hexo博客使用Github_Webhook自动部署到个人服务器</h1>
+            
+            <div class="markdown-body">
+              <p>最近想把之前写的博客重新注册一个域名放到网上，地址：<a href="https://luoluoqinghuan.cn/">https://luoluoqinghuan.cn/</a><br>。博客框架使用的是hexo，部署到服务器上也很简单，把hexo生成的网站文件放在服务器上，用koa-static起一个服务就行了。</p>
+<p>但这是一种非常麻烦的部署方式，每次更新博客都要登陆服务器手动上传，如果想要自动更新网站就要解决两个问题：</p>
+<ul>
+<li>从哪里拿到最新的代码（github）</li>
+<li>如何知道代码已经更新（github-webhook）<h2 id="What-Is-Webhook"><a href="#What-Is-Webhook" class="headerlink" title="What Is Webhook"></a>What Is Webhook</h2></li>
+</ul>
+<p>webhook是github提供的一个钩子，这个钩子在触发github一些事件后，会向配置好的地址发一个http请求。在<code>任何一个仓库 -&gt; Setting -&gt; Webhooks</code> 可以进行配置。我们可以在服务器上监听这个请求，就可以知道更新网站的时机了。</p>
+<p>github提供的事件非常丰富，有20多种，几乎覆盖了所有git相关的操作，比如打了个tag、新建了branch、有新的commit等。<br><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/882c8bc589534941bd19cc2ffc53053a~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>了解到这里，我们就知道如何去自动部署我们的博客网站了，首先将博客源码推到github上，并配置webhook，针对push事件进行监听，在个人服务器上另起一个服务，接收webhook的请求，收到请求后拉取最新代码并重新构建，done！</p>
+<h2 id="实现-web服务"><a href="#实现-web服务" class="headerlink" title="实现-web服务"></a>实现-web服务</h2><p>我们有两个服务，一个是网站服务，一个是webhook监听服务。咱们一个一个来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 网站服务 hexo_server.js</span><br><span class="hljs-keyword">const</span> serve = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa-static&#x27;</span>);<br><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa&#x27;</span>);<br><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();<br> <br><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>)<br><span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;http&#x27;</span>)<br><span class="hljs-keyword">const</span> https = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;https&#x27;</span>)<br><span class="hljs-keyword">const</span> enforceHttps = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa-sslify&#x27;</span>).default<br><br>app.use(enforceHttps())<br>app.use(serve(<span class="hljs-string">&#x27;public&#x27;</span>));<br> <br><span class="hljs-keyword">const</span> options = &#123;<br>	<span class="hljs-attr">key</span>: fs.readFileSync(<span class="hljs-string">&#x27;./ssl/luoluoqinghuan.cn.key&#x27;</span>),<br>	<span class="hljs-attr">cert</span>: fs.readFileSync(<span class="hljs-string">&#x27;./ssl/luoluoqinghuan.cn.pem&#x27;</span>)<br>&#125;<br><br>http.createServer(app.callback()).listen(<span class="hljs-number">80</span>);<br>https.createServer(options, app.callback()).listen(<span class="hljs-number">443</span>)<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;listening on port 80 443&#x27;</span>);<br><br></code></pre></td></tr></table></figure>
+<p>直接使用koa-static这个中间件，很容易就可以将网站跑起来，我还在腾讯云申请了免费的证书，这样网站就可以支持https了，虽然一个简单的静态网站好像不需要https，但使用https可以帮助博客在搜索引擎中的排名更高一些。</p>
+<h2 id="实现-webhook服务"><a href="#实现-webhook服务" class="headerlink" title="实现-webhook服务"></a>实现-webhook服务</h2><p>首先要在博客仓库里配置webhook</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51073488f70a43998748ab2094c5ec0c~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>在payloadUrl中填入你服务器的地址，webhook的http请求会发向该地址，secret是密码，webhook会在请求头中使用此密码生成哈希值，供我们鉴权使用，events我们选第一个就可以了，我们在本地写完文章，push上去，触发webhook回调，点击add就添加成功了</p>
+<p>接下来就可以写一下服务了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// webhook服务 webhook_server.js</span><br><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa&#x27;</span>);<br><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();<br><span class="hljs-keyword">const</span> child_process = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;child_process&#x27;</span>)<br><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;crypto&#x27;</span>)<br><span class="hljs-keyword">const</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa-bodyparser&#x27;</span>)<br><br><span class="hljs-keyword">const</span> sigHeaderName = <span class="hljs-string">&#x27;x-hub-signature-256&#x27;</span><br><span class="hljs-keyword">const</span> sigHashAlg = <span class="hljs-string">&#x27;sha256&#x27;</span><br><br>app.use(bodyParser())<br><br><span class="hljs-keyword">const</span> secret = <span class="hljs-string">&#x27;123456&#x27;</span><br><br><span class="hljs-keyword">const</span> main = <span class="hljs-function"><span class="hljs-params">ctx</span> =&gt;</span> &#123;<br>  <span class="hljs-comment">// 鉴权</span><br>  <span class="hljs-keyword">const</span> sig = Buffer.from(ctx.request.headers[<span class="hljs-string">`<span class="hljs-subst">$&#123;sigHeaderName&#125;</span>`</span>] || <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>)<br>  <span class="hljs-keyword">const</span> hmac = crypto.createHmac(sigHashAlg, secret)<br>  <span class="hljs-keyword">const</span> digest = Buffer.from(sigHashAlg + <span class="hljs-string">&#x27;=&#x27;</span> + hmac.update(ctx.request.rawBody).digest(<span class="hljs-string">&#x27;hex&#x27;</span>), <span class="hljs-string">&#x27;utf8&#x27;</span>)<br>  <span class="hljs-keyword">if</span> (sig.length !== digest.length || !crypto.timingSafeEqual(digest, sig)) &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Request body digest (<span class="hljs-subst">$&#123;digest&#125;</span>) did not match <span class="hljs-subst">$&#123;sigHeaderName&#125;</span> (<span class="hljs-subst">$&#123;sig&#125;</span>)`</span>)<br>    ctx.status = <span class="hljs-number">403</span><br>    <span class="hljs-keyword">return</span><br>  &#125;<br><br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;start cmd&#x27;</span>)<br>  <span class="hljs-comment">// 拉取最新代码</span><br>  <span class="hljs-keyword">const</span> cmd = <span class="hljs-string">&#x27;git checkout . &amp;&amp; git pull&#x27;</span><br><br>  <span class="hljs-keyword">try</span>&#123;<br>    <span class="hljs-keyword">const</span> log = child_process.spawnSync(cmd, &#123;<span class="hljs-attr">shell</span>: <span class="hljs-literal">true</span>&#125;)<br>    <span class="hljs-built_in">console</span>.log(log.stdout.toString())<br>  &#125;<span class="hljs-keyword">catch</span>(e)&#123;<br>    <span class="hljs-built_in">console</span>.error(e.toString())<br>    <span class="hljs-keyword">const</span> response = &#123;<span class="hljs-attr">code</span>: <span class="hljs-number">500</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;update failed&#x27;</span>&#125;<br>    ctx.response.body = response<br>    ctx.status = <span class="hljs-number">500</span><br>    <span class="hljs-keyword">return</span>;<br>  &#125;<br><br>  <span class="hljs-comment">// build网站</span><br>  <span class="hljs-keyword">const</span> cmd1 = <span class="hljs-string">&#x27;hexo clean &amp;&amp; hexo generate&#x27;</span><br>  <span class="hljs-keyword">try</span>&#123;<br>    <span class="hljs-keyword">const</span> log1 = child_process.spawnSync(cmd1, &#123;<span class="hljs-attr">shell</span>: <span class="hljs-literal">true</span>&#125;)<br>    <span class="hljs-built_in">console</span>.log(log1.stdout.toString())<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;hexo blog update successed !!!!&#x27;</span>)<br>    <span class="hljs-keyword">const</span> response = &#123;<span class="hljs-attr">code</span>: <span class="hljs-number">200</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;update successfully&#x27;</span>&#125;<br>    ctx.response.body = response<br>    ctx.status = <span class="hljs-number">200</span><br>    <span class="hljs-keyword">return</span>;<br>  &#125;<span class="hljs-keyword">catch</span>(e)&#123;<br>    <span class="hljs-built_in">console</span>.log(e.toString())<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;hexo blog update failed !!!!&#x27;</span>)<br>    <span class="hljs-keyword">const</span> response = &#123;<span class="hljs-attr">code</span>: <span class="hljs-number">500</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;failed&#x27;</span>&#125;<br>    ctx.response.body = response<br>    ctx.status = <span class="hljs-number">500</span><br>    <span class="hljs-keyword">return</span>;<br>  &#125;<br>&#125;<br>app.use(main);<br>app.listen(<span class="hljs-number">3000</span>);<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;github hook server listen at port 3000&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p>这样，我们的监听服务就搞定了，跑起来（推荐使用pm2），写一下文章，然后push一下，可以看到我们自动部署服务成功了。最新的文章也出现在了网站上。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9aacf4c41b6c42458e25936ee383797a~tplv-k3u1fbpfcp-watermark.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CI-CD/">CI/CD</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/">前端工程化</a>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo/">hexo</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/15/useSelector%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91%E6%9B%B4%E6%96%B0%E7%9A%84%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84useSelector/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">useSelector是如何触发更新的以及手写一个简单的useSelector</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/09/howTransformBabelAst/">
+                        <span class="hidden-mobile">Babel原理浅析(二)： 手写一个极简插件</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RichDavidMu/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            总访问量 
+            <span id="leancloud-site-pv"></span>
+             次
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            总访客数 
+            <span id="leancloud-site-uv"></span>
+             人
+          </span>
+      
+
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        鲁ICP备19038169号-2
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
