@@ -23,15 +23,10 @@ jobs:
       - name: Build Hexo
         run: yarn build
 
-      - name: Compress build artifacts
-        run: |
-          cd public
-          zip -r ../public.zip .
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: hexo-build
-          path: public.zip
+          name: blog
+          path: public
           retention-days: 7
           overwrite: true
