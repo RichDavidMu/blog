@@ -34,3 +34,4 @@ jobs:
           name: hexo-build
           path: public.zip
           retention-days: 7
+          overwrite: true
