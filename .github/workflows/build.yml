@@ -12,18 +12,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: 环境设置
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: 依赖安装
         run: yarn
 
-      - name: Build Hexo
+      - name: 构建博客
         run: yarn build
 
-      - name: UploadServer
+      - name: 存档
+        uses: actions/upload-artifact@v4
+        with:
+          name: blog
+          path: public
+          retention-days: 7
+          overwrite: true
+
+      - name: 部署
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.BLOG_HOST }}
