@@ -145,7 +145,7 @@ console.log(ast)
 两步：**词法解析**、**语法解析**
 
 
-![lexicalAnalysis](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b17b20db033642368a0a4d69a2ddd737~tplv-k3u1fbpfcp-watermark.image?)
+![lexicalAnalysis](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/babel11.webp?q-sign-algorithm=sha1&q-ak=AKIDUUwC2KAOF5E09DgJefZiHI4VvahkvqjsHyrJJLbKTKDzmFBdOOUgdQHE_P9qgDUE&q-sign-time=1764582059;1764585659&q-key-time=1764582059;1764585659&q-header-list=host&q-url-param-list=ci-process&q-signature=b993ee504217a58951267e327af6c0bc0c47508c&x-cos-security-token=XBp9OaGAFxWdpRnNI7LNwNs6zQ7Fs54a5c5061d345c0b7150b1bacf99aa2daff5GL-8Zz2AbSlYPlNWvn3g-BKsdkIWa1qU5cbwinlsdJ6GrCj0TVH8ndw3Kd07l7A9-euTFXJCRmBmBByfi_D_9PZYuf0-LrhU0aGUxrNIHIfIRNH-meWLmGH_KrJX1uO9SsHzVjhsDW9FeTc-hZeqRVosmfEBtrb1KBbkHQ9JpnPmAfNU2dDAMKgENYjFnWJx5x5mHUdEwVsgSEfZlcDuqK6vLf2Qj64_XLa2Ghn1gd28SODlz8mGJxfKYm99sdERQkj9BzCTx00FVp4nuWMIw&ci-process=originImage)
 
 词法解析（lexical analysis），顾名思义，是对单词本义的解析，首先扫描器（scanner）会对代码进行扫描操作，把代码分割成一个个有意义的词（lexemes），如：单词，标点等。`const square = n => n * n;`会被分割成`[const, squara, =, n, =, >, n, *, n]`。这个过程跟这段代码是用什么语言写的没有关系。随后标识器（tokenizer）会对lexemes进行释义，比如：`const`会被标识为关键字、`=, >`两个符号会标识为箭头，这个过程就与使用的语言有关了，`const`在js中会被标识为关键字，但在其他语言中就不一定。最后输出(tokens)为
 ```javascript
@@ -189,11 +189,11 @@ console.log(ast)
 ]
 ```
 当我们有了tokens，就可以进行语法解析（syntax analysis）了，解析器（parser）会把tokens转换为一棵解析树（parse tree），也可以称之为具体语法树(CST, concrete syntax tree)
-![syntaxTree](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/04039762baf24be6adbc2fc0c80da617~tplv-k3u1fbpfcp-watermark.image?)
+![syntaxTree](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/babel12.webp?q-sign-algorithm=sha1&q-ak=AKID4Qf8FNh5YnQp7R8qSw3vmqo3SRY6ZolZknQB-HBmcTXv9ir55yUVMPHltBOHlv63&q-sign-time=1764582098;1764585698&q-key-time=1764582098;1764585698&q-header-list=host&q-url-param-list=ci-process&q-signature=d4b1750fd9d5f514f9151f8b959224b7a18467a6&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRka4baec80667098f826efe73f64980f551d3qdV8P5S1HKd1E5kbCQ-UGFszZEHMTBFALeL3ShZpTu8hiVzwMuYmSgQJ4D38X-YjKP3HLbXghJytnSxghqS0EGZJUqRWWWg8FE-3nM3ndwh7bew0A6v1dgpvqNn7uacLngQA_G5lrlFg353mxSPIT2Q5w-XRL8y_-LOyZ-5jI8HjiuVF61MMF7rSa0s9HSEZt47w5NILocqzSdptQ1j-M_EYNxJIhoJqQ9_iPCI-sCcv0oLVnJyaCJZVA8rIvHcjxC1EYciyi-h3XwFuk1tA&ci-process=originImage)
 如果仔细看这棵CST，可以看到很多无用信息，比如，有很多节点只有一个子节点，那这种节点完全可以压缩去掉，因为它没有给我们提供额外的有用信息。
-![cstAfterCompress](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bbe883ca20c47bfbe50c741f734d6a3~tplv-k3u1fbpfcp-watermark.image?)
+![cstAfterCompress](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/babel13.webp?q-sign-algorithm=sha1&q-ak=AKIDyh5fsSYFXd9lVzkFri2la4BImGZXl5CkqX08TzMM9cGJspJzYoAKuHKnllRlafNI&q-sign-time=1764582108;1764585708&q-key-time=1764582108;1764585708&q-header-list=host&q-url-param-list=ci-process&q-signature=0d2343897a179c6187f11a4b87060cbcf98f968b&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRka33238a382c581d15a3a9af9c7ba80782d3qdV8P5S1HKd1E5kbCQ-eUrv69JFkJvy2IB3iiLPRpj6Y_yG795_wSrF7aYVLoZGPBiJxC3LtjX6SCJ_o8Gg7Rc8DNTEop4SZdAXqXJ5QqfzqNIlzz_RCEvOzYfErM3U0L6wLKfK55XZMAnKffRvjJdWVhIW1PfWIJd2kHO0hLvoZAt0FtfW5ezgAw4wkXiRlQdvDVr3lLhg8ZJfr6qXXCzJQdVJjM5RaU-fVr0qKcMJnzFj7LiGpUYtxK3KdM6W74R8RDLFvtzbYE2QRu8ow&ci-process=originImage)
 压缩后继续来看这棵树，可以发现一些标点符号与操作符可以用n叉树本身的结构就可以代表，所以再来简化一下。
-![ast](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/69b9d88e7e824353980fb4455607812e~tplv-k3u1fbpfcp-watermark.image?)
+![ast](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/babel14.webp?q-sign-algorithm=sha1&q-ak=AKIDkWNuL2uAhtK6vimcuy6JbwAE5k70z9jqRtg6tD2VLp80p1fJG6zIZ55pn7mpOtWR&q-sign-time=1764582138;1764585738&q-key-time=1764582138;1764585738&q-header-list=host&q-url-param-list=ci-process&q-signature=d5898bfa2c717c4ae2fde80ba1b787eb379348b5&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRkafae13a6088377318fa0d4eb8b7e67fd9d3qdV8P5S1HKd1E5kbCQ-fCUbAJQdn0UAP3X7wEj55P6IU3zgHajVCk1KlkZ5Au_N_OEDK_MCg46hitkBinUxNssynX3Y-5csL2wl9_CX4HZkNy3CCp68CJbBI0Rr9YO1vAclGbxYfu9rsFU_Ma9HZfXDUuar9-DF5XTY75PWgoV0LpnJlU9ixQhcYIupdPlj8RsiTIkXl3dYqDiKd_MsJuJN_pPvBy5DQ5-oZ0ZdcvMzknbBCB1uAAYPSXf42wHpb1iFoZsi6YAt7MFOiKjYw&ci-process=originImage)
 得到了最终我们想要的结构，一棵非常抽象（相较于CST）、简化的AST。
 
 可以在[这个网站](https://esprima.org/demo/parse.html?code=const%20square%20%3D%20n%20%3D%3E%20n%20*%20n%3B%0A)，输入随便一段代码，看看对应的tokens与AST。

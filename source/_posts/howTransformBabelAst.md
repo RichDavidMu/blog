@@ -42,7 +42,7 @@ console.log(output.code);
 ```
 
 转换这里的代码其实是`babel-plugin-transform-arrow-functions`的源码，作用是将箭头函数转换成普通函数，我们分别将转换前后的AST打印出来，比较看一下这个插件对AST做了什么。
-![astCompared](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/408772caac94408eb086119c22020f6c~tplv-k3u1fbpfcp-watermark.image?)
+![astCompared](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/babel21.webp?q-sign-algorithm=sha1&q-ak=AKIDJHtJP0wG3FOtYD_BVPrgLJ2Bwf_VHxBxahNFAxWAsZHqmun-uZ9V-zAf1L3DSlB9&q-sign-time=1764582157;1764585757&q-key-time=1764582157;1764585757&q-header-list=host&q-url-param-list=ci-process&q-signature=184156bea541da887c42021bc0f713b1b8f8c0fd&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRkaf28332c80d6f364d6c37213a3a6ae706d3qdV8P5S1HKd1E5kbCQ-XQfj2upGPCcuUfc2UIibIKMwouFU3BpIy5EkNp3ttkOUw-SlLjC6AAtd16qx1RTv45O1FTKzARhsLcr1MXyyHiIPpPuCFWcfxmn4TyG676bDeKiWq-pv--jbJT4SskEMKQjS5dlHiTgS5sIZwL5oibU5tuqFNRpwYXUHEZS-maq43D2qaSX6LGktFuY51HFM6qLwY3CQM7lRRc1us8UUWlg8InfdRNIkD-rJa2bZK7Qvi4L0QZdyWB7ayT60P2C9Q&ci-process=originImage)
 
 转后的AST结构发生了变化，这就是转换阶段babel的作用，将源代码的AST按照[标准规范](https://github.com/estree/estree)转换成目标代码的AST。看到这儿，我们其实已经可以手写一个简单的插件来玩玩了。
 

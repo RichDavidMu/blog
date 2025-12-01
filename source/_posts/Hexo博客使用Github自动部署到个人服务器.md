@@ -17,7 +17,7 @@ categories: [CI/CD]
 webhook是github提供的一个钩子，这个钩子在触发github一些事件后，会向配置好的地址发一个http请求。在`任何一个仓库 -> Setting -> Webhooks` 可以进行配置。我们可以在服务器上监听这个请求，就可以知道更新网站的时机了。
 
 github提供的事件非常丰富，有20多种，几乎覆盖了所有git相关的操作，比如打了个tag、新建了branch、有新的commit等。
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/882c8bc589534941bd19cc2ffc53053a~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/webhook1.webp?q-sign-algorithm=sha1&q-ak=AKIDgXiPHXtTqyZ94I94OF468OYo-xw4WIcyh_6P0XNF7Eo-1G737b8iPBB7nAgKnCqV&q-sign-time=1764582244;1764585844&q-key-time=1764582244;1764585844&q-header-list=host&q-url-param-list=ci-process&q-signature=16421b50e2be5242d31279ce2144ec660f92a311&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRkaa39bc692d3ff9fcb578fbb8cd9a83530d3qdV8P5S1HKd1E5kbCQ-eaH9115Q_40CMZ6C7e7aIusOak2WKzJ15cfYPE_dzHQ8vZIuvqPYL5jENmKGSMiWxCReOmy4cnGl0QPENHjBfoXuHak31fy41KogtvbP2KnePy9L60vJdGn0oGH45Lc49lUCGL07_zsQOfY9ymJZ60-3-Cn-ONdGb6HtBK_TcjldcbjjBmxm2bMihLKqb9R6_DOboNaFU1KMwCsarTSgj7ufQ7Uh9UzyvV_4z4PU5aQI_a0xQVFWQEHMQt5i99oIw&ci-process=originImage)
 
 了解到这里，我们就知道如何去自动部署我们的博客网站了，首先将博客源码推到github上，并配置webhook，针对push事件进行监听，在个人服务器上另起一个服务，接收webhook的请求，收到请求后拉取最新代码并重新构建，done！
 
@@ -52,7 +52,7 @@ console.log('listening on port 80 443');
 ## 实现-webhook服务
 首先要在博客仓库里配置webhook
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/51073488f70a43998748ab2094c5ec0c~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/webhook2.webp?q-sign-algorithm=sha1&q-ak=AKIDxTyUdaDwrS_bQW3L4_FWwQmVWZsmnMY1eoma0HSM0iokl_zl2T8TiUxo68Lhlcyw&q-sign-time=1764582253;1764585853&q-key-time=1764582253;1764585853&q-header-list=host&q-url-param-list=ci-process&q-signature=aa001dca1039d08ca5ce24e69e41599432a46988&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRkacfa95652af6da3b0c6e0f7cd72c70f41d3qdV8P5S1HKd1E5kbCQ-clPeP9Z6-NEFy-pnHpSlbme7NflBsE1pUtvo9u7BTpDttpSaE0oj3gvP6mCa3GMKy4A2ObIj4dYXXlSF9svCXourpKxrOc7xzR2PBzpGbZjQKY5KHLg9lINm3ivDiIXYa0RomG9UNF7GdpHcOOkHG84LZkdSG2bzsS4COmuM6PN6zJsJqWvEmkhJPIjgN9fVOUCdhik22DP59TRJzmsoJgpTDSk8FXZq8Vb_rh-FYqXvMKJENrJoYd6TkoUB5PZ-A&ci-process=originImage)
 
 在payloadUrl中填入你服务器的地址，webhook的http请求会发向该地址，secret是密码，webhook会在请求头中使用此密码生成哈希值，供我们鉴权使用，events我们选第一个就可以了，我们在本地写完文章，push上去，触发webhook回调，点击add就添加成功了
 
@@ -123,5 +123,5 @@ console.log('github hook server listen at port 3000')
 ```
 这样，我们的监听服务就搞定了，跑起来（推荐使用pm2），写一下文章，然后push一下，可以看到我们自动部署服务成功了。最新的文章也出现在了网站上。
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9aacf4c41b6c42458e25936ee383797a~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/webhook3.webp?q-sign-algorithm=sha1&q-ak=AKIDK1bdaV6IVtnbFYhFpGogTHAnHv1jCODn1qEPKIOS02Hh45Mcb36A_hygnvlHYvw2&q-sign-time=1764582279;1764585879&q-key-time=1764582279;1764585879&q-header-list=host&q-url-param-list=ci-process&q-signature=5ee072b0bf527e7e05fbd4969aab92da6465417d&x-cos-security-token=BPq84FigIft48b0097wRU1jJNawNsRka1cc6236901b85d89c4e73684e73bd7ead3qdV8P5S1HKd1E5kbCQ-RuWeEFBdIiemmdPNbCvvhQG9FKjUMs-2jHTXOTKtM3TN0pMXVZqRb00FPvL5LLL4B9UeJZdRRuay839cKbrYdA0MEFG_1jkiZ0TqJlWMNOPxP1y8WjBM4gdPjdj-U1Vsgxu2WzWMpxbwTQ5MVW028GwJ4-Ve-bkG8ucqA47NQEUel49ogFqqwu_i_Htl4bYhTdrZq2dT0aq6PAlF90eifir0OnCiWSOJVllIyvlQk_5jv83HAXj0BIsOA8pfl_0oA&ci-process=originImage)
 
