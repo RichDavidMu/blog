@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: 环境设置
         uses: actions/setup-node@v4
@@ -41,3 +40,4 @@ jobs:
           target: /home/blog/
           overwrite: true
           debug: true
+          strip_components: true
