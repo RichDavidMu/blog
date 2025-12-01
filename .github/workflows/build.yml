@@ -27,7 +27,8 @@ jobs:
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.BLOG_HOST }}
-          username: ${{ secrets.USER }}
+          username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: public/**
           target: /home/blog/
+          overwrite: true
