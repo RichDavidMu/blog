@@ -104,7 +104,8 @@ deploy:
   type: ''
 
 sitemap:
-  path: sitemap.xml
+  path:
+    - sitemap.xml
   tag: true
   category: true
   article: true
