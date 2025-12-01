@@ -40,4 +40,4 @@ jobs:
           target: /home/blog/
           overwrite: true
           debug: true
-          strip_components: /public
+          strip_components: 1
