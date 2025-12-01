@@ -32,3 +32,4 @@ jobs:
           source: public/**
           target: /home/blog/
           overwrite: true
+          debug: true
