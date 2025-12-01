@@ -30,4 +30,4 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           source: public/**
-          target: /home/blog
+          target: /home/blog/
