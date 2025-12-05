@@ -1,5 +1,5 @@
 ---
-title: 浏览器运行LLM开发者指南
+title: 浏览器运行LLM开发者指南【翻译】
 date: 2025-12-05 16:11:15
 index_img: https://blog-1302597662.cos.ap-shanghai.myqcloud.com/in-browser-llm-guide.jpg
 tags: [LLM]
@@ -14,6 +14,7 @@ categories: [LLM]
 在深入探讨现有框架之前，了解使浏览器内大型语言模型成为可能的底层非常重要。开发者可能不需要直接与这些层互动，但具备高层理解有助于优化性能、排查问题以及决定使用哪种框架。
 
 ![i](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/inbrowserllm1.png)
+
 让我们从底部开始逐层讨论：
 
 1. 硬件（GPU/CPU/NPU）：高效的AI计算依赖于专用硬件，如用于通用AI任务的GPU，而神经处理单元（NPU）则设计用于处理特定工作负载，如AI推理和移动设备如AI电脑中的AI驱动任务，这些任务在这些方面对能效和性能优化至关重要。
