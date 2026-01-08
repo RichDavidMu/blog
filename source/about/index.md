@@ -10,4 +10,4 @@ date: 2022-11-28 15:20:42
 
 技术上目前涉足JavaScript/React/Pixi等。
 
-博客主题来自[Fluid](https://github.com/fluid-dev/hexo-theme-fluid)主题，非常感谢制作者的分享，希望自己以后也能设计出这么美的主题。
+>博客mcp: `https://luoluoqinghuan.cn/mcp`
