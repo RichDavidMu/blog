@@ -41,11 +41,11 @@ console.log('script end');
 
 当所有微任务完成后，JavaScript才会执行`Task`队列中的下个任务，即`setTimeout`的回调函数`console.log('setTimeout');`，以此往复循环（Event Loop）。
 
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/eventloop1.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/eventloop1.awebp)
 
 下面是示例代码运行的动图
 
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/eventloop2.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/eventloop2.awebp)
 ## 再来几个题，来巩固一下
 **题目：写出运行结果**
 

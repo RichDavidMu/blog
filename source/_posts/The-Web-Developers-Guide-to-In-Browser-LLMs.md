@@ -1,7 +1,7 @@
 ---
 title: 浏览器运行LLM开发者指南【翻译】
 date: 2025-12-05 16:11:15
-index_img: https://blog-1302597662.cos.ap-shanghai.myqcloud.com/in-browser-llm-guide.jpg
+index_img: https://blog.cdn.luoluoqinghuan.cn/in-browser-llm-guide.jpg
 tags: [LLM]
 categories: [LLM]
 ---
@@ -13,7 +13,7 @@ categories: [LLM]
 # 浏览器内AI背后的隐藏复杂性
 在深入探讨现有框架之前，了解使浏览器内大型语言模型成为可能的底层非常重要。开发者可能不需要直接与这些层互动，但具备高层理解有助于优化性能、排查问题以及决定使用哪种框架。
 
-![i](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/inbrowserllm1.png)
+![i](https://blog.cdn.luoluoqinghuan.cn/inbrowserllm1.png)
 
 让我们从底部开始逐层讨论：
 

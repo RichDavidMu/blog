@@ -10,12 +10,12 @@ categories: [项目实战]
 
 客户端曾爆出了这个403错误
 
-> ![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl1.awebp)
+> ![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl1.awebp)
 > 看起来好像是css文件被跨域限制了，无法引用。那就用之前图片的代理服务器转发一下就好了。
 
 我一开始以为是跨域限制导致的css文件无法加载，所以用代理服务器转发一下，设置上相应header字段就好，问题确实就解决了。
 但是昨晚睡前一想，不对啊，css，图片等静态资源是不会被跨域限制的。于是我试了一下真正跨域限制的报错。果然不一样。
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl2.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl2.awebp)
 再试一下，将图片代理服务器中的取消跨域限制的代码注释掉
 
 ```javascript
@@ -26,7 +26,7 @@ categories: [项目实战]
 重新打开网页，没有任何变化，完美运行。
 说明之前的bug不是因为跨域产生的，那是因为什么呢。
 打开控制台看一下请求这个css文件时的network，发现了问题
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl3.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl3.awebp)
 在回复头字段里多了一个`x-tengine-error`，这是什么鬼，百度了一下，明白了，这是因为防盗链检测所出现的`error`
 ## 防盗链
 具体可以看这篇文章 [什么是防盗链](https://www.jianshu.com/p/0a1338db6cab)
@@ -47,7 +47,7 @@ categories: [项目实战]
 
 客户端在加载非本站的资源时，会在头字段加上`Referer:`字段，用来告诉服务端，这个请求是来自哪里。
 回头看一眼我们的network
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl4.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl4.awebp)
 确实是这样。
 
 那我们可以推断，知乎服务器利用是否有referer字段来判断是否为盗链行为，如果是，那么返回403错误，与`x-tengine-error: denied by Referer ACL`字段。
@@ -83,8 +83,8 @@ const imgServer = http.createServer((req, res) => {
     request.get(options, callback);
 });
 ```
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl5.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl5.awebp)
 看到控制台输出
 
-![在这里插入图片描述](https://blog-1302597662.cos.ap-shanghai.myqcloud.com/refereracl6.awebp)
+![在这里插入图片描述](https://blog.cdn.luoluoqinghuan.cn/refereracl6.awebp)
 踩坑结束。
